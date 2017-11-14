@@ -9,9 +9,11 @@
  <script>
 var obj =null;
 var ServiceUrl = "http://textronic.online/tailoriapi";
+var UserName = "abc";
+var PassWord = "abc";
 var key = "";
 $.ajax({
-  url: ServiceUrl+"/LoginUsers?UserName=abc&PasswordHash=1234",
+  url: ServiceUrl+"/LoginUsers?UserName="+UserName+"&PasswordHash="+PassWord,
   success: function (data) {
       key = data;
   }
