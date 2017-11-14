@@ -118,7 +118,8 @@ To create Tailori object public methods are used.
 			'Product':'MEN-SHIRT',   //Product i.e men shirt,women shirt, men suit, etc
 			'ProductTemplate':'#theTmpl', //Template id for Product
 			'ImageSource':'#img-div', //Container Id for place images
-			'ServiceUrl':'http://172.16.1.63' 
+			'ServiceUrl':'http://172.16.1.63',
+			'Key' : "12345678"
      });
       
 ```
@@ -285,6 +286,7 @@ function GetProduct(){
 			'ProductTemplate':'#theTmpl', //Tempalte id for Product
 			'ImageSource':'#img-div', //Container Id for place images
 			'ServiceUrl':'http://172.16.1.63',
+			'Key' : "12345678",
 			'AutoSpecific':false, //Auto specific view after selecting any feature
 			'AutoAlignment':false, //Auto alignment set according to selected element
 			'Monogram':false, //If monogram 
