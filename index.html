@@ -8,7 +8,14 @@
 <script src = "jquery.tds.js">  </script>
  <script>
 var obj =null;
-
+var ServiceUrl = "";
+var key = "";
+$.ajax({
+  url: ServiceUrl+"/LoginUsers?UserName=abc&PasswordHash=1234",
+  success: function (data) {
+      key = data;
+  }
+});
 var look = null;
 function summary(){
 	$("#summary-model").html();
@@ -112,7 +119,8 @@ obj.Look(look);
 			'ProductTemplate':'#theTmpl', //Tempalte id for Product
 			'ImageSource':'#img-div', //Container Id for place inages
 			'SpecificImageSource' : "#img-div2",
-			'ServiceUrl':'http://textronic.online/WEB_API_TDS',
+			'ServiceUrl':ServiceUrl,
+			'Key' : key,
 			'AutoSpecific':true, //Auto specific view after selecting any feature
 			'AutoAlignment':true, //Auto alignment set according to selected element
 			'Monogram':true, //If monogram 
@@ -185,7 +193,7 @@ obj.Look(look);
 		
 		//obj._set();
 		$.getJSON({
-				url: "http://textronic.online/WEB_API_TDS/v1/Swatches",				
+				url: ServiceUrl+"/v1/Swatches?Key"+key,				
 				success: function (data) {				
 				$("#fabrics").empty();
 				//console.log(data);
@@ -214,7 +222,7 @@ obj.Look(look);
 			});
 		
 		$.getJSON({
-				url: "http://textronic.online/WEB_API_TDS/v1/Product",				
+				url: ServiceUrl+"/v1/Product",				
 				success: function (data) {		
 					var txt = "";
 					$.each(data,function(index,value){
