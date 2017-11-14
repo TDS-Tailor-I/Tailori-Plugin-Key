@@ -2,7 +2,7 @@
 
 # Tailori API 
 
-Textronic design System have created an interactive platform for bespoke clothing. Textronics Tailori API is a plugin that simplifies access to the functionality of textronics services.
+Textronics Design System have created an interactive platform for bespoke clothing. Textronics Tailori API is a plugin that simplifies access to the functionality of textronics services.
 
 # Features
 
