@@ -570,6 +570,25 @@
 					continue;
 				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
 					continue;
+				
+				//For 1st time Block
+				//------------------
+				// if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[key].Id)) {
+					// for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[key].Id].length;blockedFeature++) {
+						// var feature = this._BlockedFeatures[this._RenderObject[key].Id][blockedFeature];
+						// this._CurrentBlockedFeatures.push(feature);
+						// $("[data-tds-element='" + feature + "']").addClass("block");
+					// }
+				// }
+				
+				if (this._BlockedDetails.hasOwnProperty(this._RenderObject[key].Id)) {
+					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._RenderObject[key].Id].length;blockedDetail++) {
+						var detail = this._BlockedDetails[this._RenderObject[key].Id][blockedDetail];
+						this._CurrentBlockedDetails.push(detail);
+						$("[data-tds-key='" + detail + "']").addClass("block");
+					}
+				}
+				//--------
 
 				if (this._IsSpecific)
 					if (key !== this._SpecificViewOf && key !== this._SpecificDisplay[this._SpecificViewOf] && this._SpecificDisplay[key] !== this._SpecificViewOf)
