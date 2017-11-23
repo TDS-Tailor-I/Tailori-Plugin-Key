@@ -466,6 +466,8 @@
 					}
 				}
 
+				this._CurrentBlockedFeatures = Array();
+				this._CurrentBlockedDetails = Array();
 				var selectedDetailName = "";
 				var selectedFeatureName = "";
 				var selectedDetailId = "";
