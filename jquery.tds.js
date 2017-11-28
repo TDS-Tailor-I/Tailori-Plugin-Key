@@ -420,15 +420,14 @@
 			var selectedButton,
 				that = this,
 				isButton = false,
-				buttonId;
+				buttonId = new Array();
 			if (key === undefined) {
 
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("button") > -1 &&
-					this._ProductData[dataIndex].Name.length < 8){
+					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1){
 						
 						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
-						buttonId = this._ProductData[dataIndex].Id;
+						buttonId.push(this._ProductData[dataIndex].Id);
 						isButton = true;
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
@@ -533,7 +532,7 @@
 			}
 			if(isButton){
 				$.getJSON({
-					url: this.Option("ServiceUrl") + "/v1/Swatches?id="+buttonId+"&key=" +this.Option("Key"), 
+					url: this.Option("ServiceUrl") + "/v1/Swatches?id="+buttonId[0]+"&key=" +this.Option("Key"), 
 					context: this,
 					success: function (data) {
 						var swatchId;
@@ -542,10 +541,15 @@
 							if(swatchId != undefined || swatchId != "")
 								return false;
 						});
-						that._RenderObject[buttonId].Swatch = swatchId;
-						for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
-							if(this._LibConfig[lkey].Options.indexOf(buttonId) > -1){
-								this._LibConfig[lkey].Swatch = swatchId;
+						if(buttonId.length > 0)
+						{
+							for(var i = 0 ; i < buttonId.length; i++){
+								that._RenderObject[buttonId[i]].Swatch = swatchId;
+								for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
+									if(this._LibConfig[lkey].Options.indexOf(buttonId[i]) > -1){
+										this._LibConfig[lkey].Swatch = swatchId;
+									}
+								}
 							}
 						}
 						that._createUrl();
@@ -659,8 +663,8 @@
 
 				if (this._ReverseLinks[key] !== undefined) {
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
-						if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
-							continue;
+						// if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
+							// continue;
 						this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
 							this._Url += "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch;
