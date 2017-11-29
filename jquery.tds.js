@@ -1043,6 +1043,8 @@
 			for (var key in this._RenderObject) {
 				selectedElements.push(this._RenderObject[key].Id);
 				for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
+					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
+						continue;
 					selectedContrast.push({
 						'Detail': key,
 						'ContrastNo': contrastKey,
@@ -1171,6 +1173,8 @@
 		ResetContrast: function () {
 			for (var key in this._RenderObject) {
 				for (var contrastKey=0;contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
+					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
+						continue;
 					this._RenderObject[key].Contrast[contrastKey].Swatch = "";
 					this._RenderObject[key].Contrast[contrastKey].Color = "";
 				}
