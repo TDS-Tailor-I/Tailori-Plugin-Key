@@ -420,15 +420,14 @@
 			var selectedButton,
 				that = this,
 				isButton = false,
-				buttonId;
+				buttonId = new Array();
 			if (key === undefined) {
 
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("button") > -1 &&
-					this._ProductData[dataIndex].Name.length < 8){
+					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1){
 						
 						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
-						buttonId = this._ProductData[dataIndex].Id;
+						buttonId.push(this._ProductData[dataIndex].Id);
 						isButton = true;
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
@@ -466,6 +465,8 @@
 					}
 				}
 
+				this._CurrentBlockedFeatures = Array();
+				this._CurrentBlockedDetails = Array();
 				var selectedDetailName = "";
 				var selectedFeatureName = "";
 				var selectedDetailId = "";
@@ -531,7 +532,7 @@
 			}
 			if(isButton){
 				$.getJSON({
-					url: this.Option("ServiceUrl") + "/v1/Swatches?id="+buttonId+"&key=" +this.Option("Key"), 
+					url: this.Option("ServiceUrl") + "/v1/Swatches?id="+buttonId[0]+"&key=" +this.Option("Key"), 
 					context: this,
 					success: function (data) {
 						var swatchId;
@@ -540,10 +541,15 @@
 							if(swatchId != undefined || swatchId != "")
 								return false;
 						});
-						that._RenderObject[buttonId].Swatch = swatchId;
-						for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
-							if(this._LibConfig[lkey].Options.indexOf(buttonId) > -1){
-								this._LibConfig[lkey].Swatch = swatchId;
+						if(buttonId.length > 0)
+						{
+							for(var i = 0 ; i < buttonId.length; i++){
+								that._RenderObject[buttonId[i]].Swatch = swatchId;
+								for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
+									if(this._LibConfig[lkey].Options.indexOf(buttonId[i]) > -1){
+										this._LibConfig[lkey].Swatch = swatchId;
+									}
+								}
 							}
 						}
 						that._createUrl();
@@ -570,6 +576,25 @@
 					continue;
 				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
 					continue;
+				
+				//For 1st time Block
+				//------------------
+				// if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[key].Id)) {
+					// for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[key].Id].length;blockedFeature++) {
+						// var feature = this._BlockedFeatures[this._RenderObject[key].Id][blockedFeature];
+						// this._CurrentBlockedFeatures.push(feature);
+						// $("[data-tds-element='" + feature + "']").addClass("block");
+					// }
+				// }
+				
+				if (this._BlockedDetails.hasOwnProperty(this._RenderObject[key].Id)) {
+					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._RenderObject[key].Id].length;blockedDetail++) {
+						var detail = this._BlockedDetails[this._RenderObject[key].Id][blockedDetail];
+						this._CurrentBlockedDetails.push(detail);
+						$("[data-tds-key='" + detail + "']").addClass("block");
+					}
+				}
+				//--------
 
 				if (this._IsSpecific)
 					if (key !== this._SpecificViewOf && key !== this._SpecificDisplay[this._SpecificViewOf] && this._SpecificDisplay[key] !== this._SpecificViewOf)
@@ -638,8 +663,8 @@
 
 				if (this._ReverseLinks[key] !== undefined) {
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
-						if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
-							continue;
+						// if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
+							// continue;
 						this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
 							this._Url += "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch;
@@ -1018,6 +1043,8 @@
 			for (var key in this._RenderObject) {
 				selectedElements.push(this._RenderObject[key].Id);
 				for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
+					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
+						continue;
 					selectedContrast.push({
 						'Detail': key,
 						'ContrastNo': contrastKey,
@@ -1146,6 +1173,8 @@
 		ResetContrast: function () {
 			for (var key in this._RenderObject) {
 				for (var contrastKey=0;contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
+					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
+						continue;
 					this._RenderObject[key].Contrast[contrastKey].Swatch = "";
 					this._RenderObject[key].Contrast[contrastKey].Color = "";
 				}
