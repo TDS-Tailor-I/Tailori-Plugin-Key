@@ -667,17 +667,20 @@
 							// continue;
 						this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-							this._Url += "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch;
+							this._Url += "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
+						else
+							this._Url += "&pair=" + this._RenderObject[key].Id + "/";
+						
 						/* changes by Rohit */
 						if (this._RenderObject[this._ReverseLinks[key][index]].Contrast.length > 0){
-							this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
+							//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
 							for(var ContrastIndex=0;ContrastIndex < this._RenderObject[this._ReverseLinks[key][index]].Contrast.length;ContrastIndex++){
 								if(this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex] == undefined)
 									continue;
 								this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex].Swatch + "&grouporderno="+ContrastIndex + "/";
 							}
 						}else if(this._RenderObject[key].Contrast.length > 0){
-								this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
+								//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
 								for(var ContrastIndex=0;ContrastIndex < this._RenderObject[key].Contrast.length;ContrastIndex++){
 									if(this._RenderObject[key].Contrast[ContrastIndex] == undefined)
 										continue;
@@ -698,8 +701,6 @@
 									if(!flag)
 										this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[key].Contrast[ContrastIndex].Swatch + "&grouporderno="+ContrastIndex + "/";
 								}
-						}else{
-							this._Url += "&pair=" + this._RenderObject[key].Id + "/";
 						}
 						/* End */
 					}
