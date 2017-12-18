@@ -532,7 +532,7 @@
 			}
 			if(isButton){
 				$.getJSON({
-					url: this.Option("ServiceUrl") + "/v1/Swatches?id="+buttonId[0]+"&key=" +this.Option("Key"), 
+					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0], 
 					context: this,
 					success: function (data) {
 						var swatchId;
@@ -1186,6 +1186,9 @@
 		ResetProduct: function () {
 			this._CurrentBlockedFeatures = Array();
 			this._CurrentBlockedDetails = Array();
+			this._Swatch = "";
+			this._Color = "";
+			this._SelectedAlignment = "face";
 			this._createRenderObject();
 		},
 
