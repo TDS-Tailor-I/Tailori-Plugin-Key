@@ -532,7 +532,7 @@
 			}
 			if(isButton){
 				$.getJSON({
-					url: this.Option("ServiceUrl") + "/v1/Swatches?id="+buttonId[0]+"&key=" +this.Option("Key"), 
+					url: this.Option("ServiceUrl") + "/v1/Swatches?key=" + this.Option("Key") + "&id="+buttonId[0], 
 					context: this,
 					success: function (data) {
 						var swatchId;
