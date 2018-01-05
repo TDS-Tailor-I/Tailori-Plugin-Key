@@ -538,11 +538,12 @@
 					context: this,
 					success: function (data) {
 						var swatchId;
-						$.each(data,function(index,value){
-							swatchId = value;
-							if(swatchId != undefined || swatchId != "")
-								return false;
-						});
+						// $.each(data[0],function(index,value){
+							// swatchId = value;
+							// if(swatchId != undefined || swatchId != "")
+								// return false;
+						// });
+						swatchId = data[0].Id;
 						if(buttonId.length > 0)
 						{
 							for(var i = 0 ; i < buttonId.length; i++){
