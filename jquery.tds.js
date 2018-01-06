@@ -182,6 +182,10 @@
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 						});
 
@@ -192,6 +196,10 @@
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 
 						});
@@ -204,6 +212,10 @@
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 						});
 
@@ -214,6 +226,10 @@
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 
 						});
@@ -609,7 +625,7 @@
 
 				var swatch = "";
 				if (this._RenderObject[key].Swatch !== "") {
-					swatch = "&swatch=" + this._RenderObject[key].Swatch;
+					swatch = "&s=" + this._RenderObject[key].Swatch;
 				} else if (this._RenderObject[key].Color !== "") {
 					swatch = "&color=" + this._RenderObject[key].Color;
 				}
@@ -620,18 +636,18 @@
 
 						for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
 							if (swatch !== "")
-								this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + swatch + "/";
+								this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + swatch + "/";
 							else
-								this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + "/";
+								this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + "/";
 						}
 					}
 
 				}
 
 				if (swatch !== "")
-					this._Url += "part=" + this._RenderObject[key].Id + swatch + "/";
+					this._Url += "p=" + this._RenderObject[key].Id + swatch + "/";
 				else
-					this._Url += "part=" + this._RenderObject[key].Id + "/";
+					this._Url += "p=" + this._RenderObject[key].Id + "/";
 				if (this._RenderObject[key].Contrast.length > 0) {
 					for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
 						if (this._RenderObject[key].Contrast[contrastKey] === null || this._RenderObject[key].Contrast[contrastKey] === undefined)
@@ -647,19 +663,19 @@
 								for (var fLink in this._DoubleLinks[key]) {
 										for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
 											if (swatch !== "")
-												this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
+												this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
 											else
-												this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
+												this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
 										}
 								}
 
 							}
 							else{
-								this._Url += "part=" + this._RenderObject[key].Id;
+								this._Url += "p=" + this._RenderObject[key].Id;
 							}
 							/* End */
-							this._Url += cSwatch != "" ? "&swatch=" + this._RenderObject[key].Contrast[contrastKey].Swatch : "&swatch=" + this._RenderObject[key].Contrast[contrastKey].Color;
-							this._Url += "&grouporderno=" + contrastKey + "/";
+							this._Url += cSwatch != "" ? "&s=" + this._RenderObject[key].Contrast[contrastKey].Swatch : "&s=" + this._RenderObject[key].Contrast[contrastKey].Color;
+							this._Url += "&gon=" + contrastKey + "/";
 						}
 					}
 				}
@@ -668,11 +684,11 @@
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
 						// if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
 							// continue;
-						this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
+						this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-							this._Url += "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
+							this._Url += "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
 						else
-							this._Url += "&pair=" + this._RenderObject[key].Id + "/";
+							this._Url += "&pa=" + this._RenderObject[key].Id + "/";
 						
 						/* changes by Rohit */
 						if (this._RenderObject[this._ReverseLinks[key][index]].Contrast.length > 0){
@@ -680,7 +696,7 @@
 							for(var ContrastIndex=0;ContrastIndex < this._RenderObject[this._ReverseLinks[key][index]].Contrast.length;ContrastIndex++){
 								if(this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex] == undefined)
 									continue;
-								this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex].Swatch + "&grouporderno="+ContrastIndex + "/";
+								this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex].Swatch + "&gon="+ContrastIndex + "/";
 							}
 						}else if(this._RenderObject[key].Contrast.length > 0){
 								//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
@@ -702,7 +718,7 @@
 									}
 									
 									if(!flag)
-										this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[key].Contrast[ContrastIndex].Swatch + "&grouporderno="+ContrastIndex + "/";
+										this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[key].Contrast[ContrastIndex].Swatch + "&gon="+ContrastIndex + "/";
 								}
 						}
 						/* End */
@@ -747,7 +763,7 @@
 					//this._IsSpecific = true;
 
 			console.log(this._Url);
-			if (this._Url.indexOf("part") === -1) {
+			if (this._Url.indexOf("p=") === -1) {
 				this._IsSpecific = false;
 				this._createUrl();
 			} else
@@ -1045,6 +1061,12 @@
 			}
 
 			for (var key in this._RenderObject) {
+				
+				if (this._CurrentBlockedDetails.indexOf(key) !== -1)
+					continue;
+				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
+					continue;
+				
 				selectedElements.push(this._RenderObject[key].Id);
 				for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
 					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
@@ -1179,8 +1201,8 @@
 				for (var contrastKey=0;contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
 					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
 						continue;
-					this._RenderObject[key].Contrast[contrastKey].Swatch = "";
-					this._RenderObject[key].Contrast[contrastKey].Color = "";
+					this._RenderObject[key].Contrast = [];
+					//this._RenderObject[key].Contrast[contrastKey].Color = "";
 				}
 			}
 			this._createUrl();
@@ -1192,6 +1214,10 @@
 			this._Swatch = "";
 			this._Color = "";
 			this._SelectedAlignment = "face";
+			this._MonogramPlacement = "";
+			this._MonogramColor = "";
+			this._MonogramFont = "";
+			this._MonogramText = "";
 			this._createRenderObject();
 		},
 
