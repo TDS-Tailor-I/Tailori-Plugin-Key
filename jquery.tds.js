@@ -1218,6 +1218,10 @@
 			this._MonogramColor = "";
 			this._MonogramFont = "";
 			this._MonogramText = "";
+			
+			for (var lkey=0; lkey < this._LibConfig.length;lkey++) 
+				this._LibConfig[lkey].Swatch = "";
+				
 			this._createRenderObject();
 		},
 
