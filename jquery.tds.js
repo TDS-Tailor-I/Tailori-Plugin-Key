@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin
+ * jQuery tds.tailori plugin v-2.2
  * Original Author:  @ Sagar Narayane
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -22,6 +22,7 @@
 
 	Plugin.prototype = {
 		_Url: "",
+		_ImageUrl : "",
 		_Links: new Object(),
 		_ReverseLinks: new Object(),
 		_DoubleLinks: new Object(),
@@ -84,6 +85,7 @@
 		},
 
 		init: function () {
+			console.warn("Textronic jquery.tds.js v-2.2");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -238,7 +240,7 @@
 					$("body").on("click", "[data-tds-element]", function (e) {
 						e.stopPropagation();
 						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
-							console.log("feature is block");
+							console.error("feature is block");
 						} else {
 							that._SpecificViewOf = $(this).attr("data-tds-key");
 							that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
@@ -438,12 +440,21 @@
 				isButton = false,
 				buttonId = new Array();
 			if (key === undefined) {
-
+				
+				var LibconfigName = new Array();
+				for(var l = 0 ; l < that._LibConfig.length ; l++){
+					if(that._LibConfig[l] == undefined)
+						continue
+					LibconfigName.push(that._LibConfig[l].Name.toLowerCase());
+				}
+				//console.log(LibconfigName);
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1){
+					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1 &&
+					LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase()) > -1){
 						
 						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
-						buttonId.push(this._ProductData[dataIndex].Id);
+						//buttonId.push(this._ProductData[dataIndex].Id);
+						buttonId = this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options;
 						isButton = true;
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
@@ -762,7 +773,7 @@
 				//if (this.Option("AutoSpecific"))
 					//this._IsSpecific = true;
 
-			console.log(this._Url);
+			//console.log(this._Url);
 			if (this._Url.indexOf("p=") === -1) {
 				this._IsSpecific = false;
 				this._createUrl();
@@ -772,7 +783,9 @@
 					context: this,
 					success: function (data) {
 
-						$(this.Option("ImageSource")).empty();
+						//$(this.Option("ImageSource")).empty();
+						if(this._SelectedAlignment.toLowerCase() == "face" && !this._IsSpecific)
+							this._ImageUrl = this.Option("ServiceUrl") + "/v1/img?" + this._Url+"&key="+this.Option("Key");
 						
 						if(!this._SpecificImageSource)
 							$(this.Option("SpecificImageSource")).empty();
@@ -780,8 +793,10 @@
 						var isAny = false;
 						var className = Date.now();
 						var imagesArray = [];
-						//var c = 1;
+						var c = 1;
 						var imgSrc = this.Option("ImageSource");
+						
+						$(imgSrc).find('.TdsNew').removeClass('TdsNew').addClass('TdsOld');
 						
 						var specificimgsrc = this.Option("SpecificImageSource");
 						var spe = false;
@@ -805,20 +820,24 @@
 											//spe = true;
 											spe = true;
 										}else if(specificimgsrc != "" && !this._SpecificImageSource){
-											$(imgSrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + data[url] + "?h=" + h + "&scale=both'>");
 											$(specificimgsrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
 										}
 										else
-											$(imgSrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + data[url] + "?h=" + h + "&scale=both'>");
 									}
 									imagesArray.push(data[url]);
 									if(specificimgsrc != "" && this._IsSpecific && !this._SpecificRender)
 										isAny = false;
 									else
 										isAny = true;
+									
+									c++;
 								}
 							}
-						
+							
+							
+							
 						if(spe)
 							this._SpecificImageSource = true;
 						
@@ -833,16 +852,49 @@
 							this._createUrl();
 						} else {
 							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/v1/img?key="+this.Option("Key") + "&"+ raw + "/type=5");
-							var callback = this.Option("OnRenderImageChange");
-							if (typeof callback == 'function')
-								callback.call(this, imagesArray);
+							
+							var that = this;
+							var loadedImage = 0;
+							
+							$(imgSrc + ' .TdsNew').on('load', function() {
+								//console.log($(this).attr('c')); 
+								loadedImage++;
+								if(loadedImage == $(imgSrc + ' .TdsNew').length){
+									
+									//$(imgSrc + ' .TdsNew').css('opacity','1');
+									for (var i = 0,t=50; i < 1.0; i += 0.1) {
+										that._effect(imgSrc,i.toFixed(1).toString(),t);
+										t =t+50;
+									}
+									//$(imgSrc + ' .TdsOld').remove();
+									loadedImage = 0;
+									
+									var callback = that.Option("OnRenderImageChange");
+									if (typeof callback == 'function')
+									callback.call(that, imagesArray);
+								}
+							}).each(function() {
+							  if(this.complete) $(this).load();
+							});
+							
 						}
 					},
 					fail: function () {}
 				});
 
 		},
-
+		_effect : function(imgSrc,i,t){
+			setTimeout(function(){
+				$(imgSrc).find('.TdsNew').css('opacity',i);
+				//console.log(i)
+			},t);
+			setTimeout(function(){
+				$(imgSrc).find('.TdsOld').css('opacity',(1.0 - i).toFixed(1));
+				//console.log((1.0 - i).toFixed(1));
+				if((1.0 - i).toFixed(1) == 0.0)
+					$(imgSrc + ' .TdsOld').remove();
+			},t);
+		},
 		_linkingBlocking: function () {
 			$.getJSON({
 				url: this.Option("ServiceUrl") + "/api/products/" + this.Option("Product") + "/link"+"/"+this.Option("Key"),
@@ -991,6 +1043,7 @@
 					this._Color = color;
 			}
 			this._SpecificImageSource = false;
+			//this._IsSpecific = false;
 			this._createUrl();
 
 		},
@@ -1131,16 +1184,33 @@
 				};
 			}
 			else if(rawRenderData.toLowerCase() === "image"){
-				var image = null;
+				var image = "";
 				$.ajax({
-					url: this.Option("ServiceUrl") + "/v1/img?" + this._Url + "&key=" + this.Option("Key"),
+					url: this._ImageUrl,
 					type: "GET",
-
 					processData: false,
 					async: false,
-					success: function (result) {
-						image = result;
-					}
+					beforeSend: function (xhr) {
+						xhr.overrideMimeType('text/plain; charset=x-user-defined');
+					},
+					success: function (result, textStatus, jqXHR) {       
+						if(result.length < 1){
+							console.error("The Image doesn't exist");
+							return
+						}
+
+						var binary = "";
+						var responseText = jqXHR.responseText;
+						var responseTextLen = responseText.length;
+
+						for ( i = 0; i < responseTextLen; i++ ) {
+							binary += String.fromCharCode(responseText.charCodeAt(i) & 255)
+						}
+						image = "data:image/png;base64," + btoa(binary);
+					},
+					error: function(xhr, textStatus, errorThrown){
+						console.error("Error in getting document "+textStatus);
+					} 
 				});
 				return image;
 			}
@@ -1340,7 +1410,7 @@
 							}
 						}
 					}
-					console.log(optionarray);
+					//console.log(optionarray);
 					for(var dataIndex=0; dataIndex < optionarray.length ; dataIndex++){
 						$("[data-tds-option='" + optionarray[dataIndex] + "']").addClass("selected");
 					}
