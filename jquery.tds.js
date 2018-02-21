@@ -1,6 +1,6 @@
 /*
  * jQuery tds.tailori plugin v-2.2
- * Original Author:  @ Sagar Narayane
+ * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
  */
