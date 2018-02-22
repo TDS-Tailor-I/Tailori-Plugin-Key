@@ -783,7 +783,7 @@
 				if(this.Option("ImageFormat").toLowerCase() == "png" || this.Option("ImageFormat").toLowerCase() == "p")
 					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&if=png&key="+this.Option("Key");
 				else
-					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key")
+					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key");
 				$.getJSON({
 					url: url,
 					context: this,
