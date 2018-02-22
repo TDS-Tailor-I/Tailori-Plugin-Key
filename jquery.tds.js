@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.2
+ * jQuery tds.tailori plugin v-2.3
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -75,6 +75,7 @@
 			AutoSpecific: true,
 			AutoAlignment: true,
 			ImageSize :"1000",
+			ImageFormat : "jpg",
 			OnProductChange: "",
 			OnProductDetailChange: "",
 			OnOptionChange: "",
@@ -85,7 +86,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-2.2");
+			console.warn("Textronic jquery.tds.js v-2.3");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -777,9 +778,14 @@
 			if (this._Url.indexOf("p=") === -1) {
 				this._IsSpecific = false;
 				this._createUrl();
-			} else
+			}else{
+				var url = "";
+				if(this.Option("ImageFormat").toLowerCase() == "png" || this.Option("ImageFormat").toLowerCase() == "p")
+					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&if=png&key="+this.Option("Key");
+				else
+					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key")
 				$.getJSON({
-					url: this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key"),
+					url: url,
 					context: this,
 					success: function (data) {
 
@@ -881,6 +887,7 @@
 					},
 					fail: function () {}
 				});
+			}
 
 		},
 		_effect : function(imgSrc,i,t){
