@@ -1,6 +1,6 @@
 /*
- * jQuery tds.tailori plugin
- * Original Author:  @ Sagar Narayane
+ * jQuery tds.tailori plugin v-2.3
+ * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
  */
@@ -22,6 +22,7 @@
 
 	Plugin.prototype = {
 		_Url: "",
+		_ImageUrl : "",
 		_Links: new Object(),
 		_ReverseLinks: new Object(),
 		_DoubleLinks: new Object(),
@@ -54,7 +55,6 @@
 		_SelectedAlignment: "face",
 		_IsCustomizeOptions : false,
 		_CustomizeOptions : [],
-		_oldValue : "",
 
 		defaults: {
 			Product: "Men-Shirt",
@@ -86,6 +86,7 @@
 		},
 
 		init: function () {
+			console.warn("Textronic jquery.tds.js v-2.3");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -96,9 +97,9 @@
 			var templateId = this.Option("ProductTemplate");
 			if (templateId == "")
 				return;
-			
+
 			$.getJSON({
-				url: this.Option("ServiceUrl") + "/api/products/" + type,
+				url: this.Option("ServiceUrl") + "/api/products/" + type +"/"+ this.Option("Key"),
 				context: this,
 				success: function (data) {
 					var that = this;
@@ -115,7 +116,7 @@
 						if (addOnTemplateId == "")
 							return;
 						var i=0;
-						
+
 						$.each(that._ProductData,function(index,value){
 							var p = that._ProductData[index].IsAddOn;
 							if(that._ProductData[index].IsAddOn){
@@ -123,27 +124,27 @@
 								i++;
 							}
 						});
-						
+
 						var template = $.templates(templateId);
 						var htmlOutput = template.render({
 								"Product": that._ProductData
 							});
 						this.$element.html(htmlOutput);
-						
+
 						var addOnUiId = that.Option("AddOnOptionsPlace");
 						var template2 = $.templates(addOnTemplateId);
 						var htmlOutput2 = template2.render({
 								"AddOn": that._AddOnData
 							});
 						$(addOnUiId).html(htmlOutput2);
-						
+
 						for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
 							if (this._ProductData[dataIndex].IsAddOn == true) {
 								this.$element.find("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").remove();
 								this.$element.find("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").remove();
 							}
 						}
-						
+
 					}else{
 						var template = $.templates(templateId);
 						var htmlOutput = template.render({
@@ -151,7 +152,7 @@
 							});
 						this.$element.html(htmlOutput);
 					}
-						
+
 					/* End */
 
 					for (var key=0 ;key < this._Alignments.length;key++) {
@@ -179,10 +180,15 @@
 
 						$("body").on("click", "[data-tds-mplace]", function () {
 							that._MonogramPlacement = $(this).data("tds-mplace");
+
 							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 						});
 
@@ -193,25 +199,40 @@
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
+
 						});
 
 						$("body").on("click", "[data-tds-mcolor]", function () {
 
 							that._MonogramColor = $(this).data("tds-mcolor");
+
 							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 						});
 
 						$("body").on("change", '[data-tds-moption="text"]', function () {
 							that._MonogramText = $(this).val();
+
 							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 							{
 								that._IsSpecific = false;
 								that._createUrl();
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
 							}
 
 						});
@@ -220,7 +241,7 @@
 					$("body").on("click", "[data-tds-element]", function (e) {
 						e.stopPropagation();
 						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
-							console.log("feature is block");
+							console.error("feature is block");
 						} else {
 							that._SpecificViewOf = $(this).attr("data-tds-key");
 							that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
@@ -415,44 +436,72 @@
 
 		_createRenderObject: function (key, value) {
 
+			var selectedButton,
+				that = this,
+				isButton = false,
+				buttonId = new Array();
 			if (key === undefined) {
-
+				
+				var LibconfigName = new Array();
+				for(var l = 0 ; l < that._LibConfig.length ; l++){
+					if(that._LibConfig[l] == undefined)
+						continue
+					LibconfigName.push(that._LibConfig[l].Name.toLowerCase());
+				}
+				//console.log(LibconfigName);
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-					this._RenderObject[this._ProductData[dataIndex].Id] = {
-						Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
-						Swatch: "",
-						Color: "",
-						Contrast: []
-					};
+					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1 &&
+					LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase()) > -1){
+						
+						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
+						//buttonId.push(this._ProductData[dataIndex].Id);
+						buttonId = this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options;
+						isButton = true;
+						this._RenderObject[this._ProductData[dataIndex].Id] = {
+							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
+							Swatch: "",
+							Color: "",
+							Contrast: []
+						};
+					}else{
+						this._RenderObject[this._ProductData[dataIndex].Id] = {
+							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
+							Swatch: "",
+							Color: "",
+							Contrast: []
+						};
+					}
+					
 				}
 
 			} else if (key !== "") {
-				
-				//this._CurrentBlockedFeatures = new array();
-				
-				if (this._BlockedFeatures.hasOwnProperty(this._oldValue)) {
-					for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._oldValue].length; blockedFeature++) {
-						//var feature = this._CurrentBlockedFeatures[this._RenderObject[key].Id][blockedFeature];
-						var feature = this._BlockedFeatures[this._oldValue][blockedFeature];
+
+				var oldValue = this._RenderObject[key].Id;
+				if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[oldValue])) {
+					for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[oldValue].Id].length; blockedFeature++) {
+						var feature = this._CurrentBlockedFeatures[this._RenderObject[key].Id][blockedFeature];
 						this._CurrentBlockedFeatures.pop(feature);
 						$("[data-tds-element='" + feature + "']").removeClass("block");
 					}
 				}
 
-				if (this._BlockedDetails.hasOwnProperty(this._oldValue)) {
-					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._oldValue].length; blockedDetail++) {
-						var detail = this._BlockedDetails[this._oldValue][blockedDetail];
+				if (this._BlockedDetails.hasOwnProperty(oldValue)) {
+					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[oldValue].length; blockedDetail++) {
+						var detail = this._BlockedDetails[oldValue][blockedDetail];
 						this._CurrentBlockedDetails.pop(detail);
 						$("[data-tds-key='" + detail + "']").removeClass("block");
 					}
 				}
-				
-				
+
+				this._CurrentBlockedFeatures = Array();
+				this._CurrentBlockedDetails = Array();
 				var selectedDetailName = "";
 				var selectedFeatureName = "";
+				var selectedDetailId = "";
 				for (var i = 0; i < this._ProductData.length; i++) {
 					if (this._ProductData[i].Id == key) {
 						selectedDetailName = this._ProductData[i].Name;
+						selectedDetailId = this._ProductData[i].Id;
 						for (var j = 0; j < this._ProductData[i].Options.length; j++) {
 							for (var k = 0; k < this._ProductData[i].Options[j].Features.length; k++) {
 								if (this._ProductData[i].Options[j].Features[k].Id == value) {
@@ -471,6 +520,11 @@
 				}
 
 				if (selectedDetailName.toLowerCase().indexOf("button") > -1) {
+					// if(selectedDetailName.length == 6){
+						// selectedButton = selectedFeatureName;
+						// buttonId = selectedDetailId;
+						// isButton = true;
+					// }
 					for (var i = 0; i < this._ProductData.length; i++) {
 						var dName = this._ProductData[i].Name.toLowerCase();
 						if (dName.indexOf("hole") > -1 || dName.indexOf("thread") > -1) {
@@ -486,7 +540,6 @@
 					}
 				}
 				this._RenderObject[key].Id = value;
-				this._oldValue = this._RenderObject[key].Id;
 
 				if (this._BlockedFeatures.hasOwnProperty(value)) {
 					for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[value].length;blockedFeature++) {
@@ -503,9 +556,41 @@
 						$("[data-tds-key='" + detail + "']").addClass("block");
 					}
 				}
-
+				//this._createUrl();
 			}
-			this._createUrl();
+			if(isButton){
+				$.getJSON({
+
+					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0], 
+
+					context: this,
+					success: function (data) {
+						var swatchId;
+						// $.each(data[0],function(index,value){
+							// swatchId = value;
+							// if(swatchId != undefined || swatchId != "")
+								// return false;
+						// });
+						swatchId = data[0].Id;
+						if(buttonId.length > 0)
+						{
+							for(var i = 0 ; i < buttonId.length; i++){
+								that._RenderObject[buttonId[i]].Swatch = swatchId;
+								for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
+									if(this._LibConfig[lkey].Options.indexOf(buttonId[i]) > -1){
+										this._LibConfig[lkey].Swatch = swatchId;
+									}
+								}
+							}
+						}
+						that._createUrl();
+						isButton = false;
+					},
+					fail: function () {}
+				});
+			}else{
+				this._createUrl();
+			}
 		},
 
 		_setContrast: function (key, value) {
@@ -514,7 +599,7 @@
 		},
 
 		_createUrl: function () {
-
+			//this._loader();
 			this._Url = "";
 
 			for (var key in this._RenderObject) {
@@ -522,6 +607,25 @@
 					continue;
 				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
 					continue;
+				
+				//For 1st time Block
+				//------------------
+				// if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[key].Id)) {
+					// for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[key].Id].length;blockedFeature++) {
+						// var feature = this._BlockedFeatures[this._RenderObject[key].Id][blockedFeature];
+						// this._CurrentBlockedFeatures.push(feature);
+						// $("[data-tds-element='" + feature + "']").addClass("block");
+					// }
+				// }
+				
+				if (this._BlockedDetails.hasOwnProperty(this._RenderObject[key].Id)) {
+					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._RenderObject[key].Id].length;blockedDetail++) {
+						var detail = this._BlockedDetails[this._RenderObject[key].Id][blockedDetail];
+						this._CurrentBlockedDetails.push(detail);
+						$("[data-tds-key='" + detail + "']").addClass("block");
+					}
+				}
+				//--------
 
 				if (this._IsSpecific)
 					if (key !== this._SpecificViewOf && key !== this._SpecificDisplay[this._SpecificViewOf] && this._SpecificDisplay[key] !== this._SpecificViewOf)
@@ -533,7 +637,7 @@
 
 				var swatch = "";
 				if (this._RenderObject[key].Swatch !== "") {
-					swatch = "&swatch=" + this._RenderObject[key].Swatch;
+					swatch = "&s=" + this._RenderObject[key].Swatch;
 				} else if (this._RenderObject[key].Color !== "") {
 					swatch = "&color=" + this._RenderObject[key].Color;
 				}
@@ -544,18 +648,18 @@
 
 						for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
 							if (swatch !== "")
-								this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + swatch + "/";
+								this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + swatch + "/";
 							else
-								this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + "/";
+								this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + "/";
 						}
 					}
 
 				}
 
 				if (swatch !== "")
-					this._Url += "part=" + this._RenderObject[key].Id + swatch + "/";
+					this._Url += "p=" + this._RenderObject[key].Id + swatch + "/";
 				else
-					this._Url += "part=" + this._RenderObject[key].Id + "/";
+					this._Url += "p=" + this._RenderObject[key].Id + "/";
 				if (this._RenderObject[key].Contrast.length > 0) {
 					for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
 						if (this._RenderObject[key].Contrast[contrastKey] === null || this._RenderObject[key].Contrast[contrastKey] === undefined)
@@ -563,46 +667,71 @@
 						var cSwatch = this._RenderObject[key].Contrast[contrastKey].Swatch;
 						var cColor = this._RenderObject[key].Contrast[contrastKey].Color;
 						if (cSwatch !== "" || cColor !== "") {
-							
+
 							/* change by Rohit */
 							//this._Url += "part=" + this._RenderObject[key].Id;
+
 							if (this._DoubleLinks.hasOwnProperty(key)) {
 								for (var fLink in this._DoubleLinks[key]) {
 										for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
 											if (swatch !== "")
-												this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
+												this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
 											else
-												this._Url += "part=" + this._RenderObject[key].Id + "&pair=" + this._RenderObject[fLink].Id + "&pairpair=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
+												this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
 										}
-								}		
+								}
 
 							}
 							else{
-								this._Url += "part=" + this._RenderObject[key].Id;
+								this._Url += "p=" + this._RenderObject[key].Id;
 							}
 							/* End */
-							this._Url += cSwatch != "" ? "&swatch=" + this._RenderObject[key].Contrast[contrastKey].Swatch : "&swatch=" + this._RenderObject[key].Contrast[contrastKey].Color;
-							this._Url += "&grouporderno=" + contrastKey + "/";
+							this._Url += cSwatch != "" ? "&s=" + this._RenderObject[key].Contrast[contrastKey].Swatch : "&s=" + this._RenderObject[key].Contrast[contrastKey].Color;
+							this._Url += "&gon=" + contrastKey + "/";
 						}
 					}
 				}
+
 				if (this._ReverseLinks[key] !== undefined) {
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
-						if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
-							continue;
-						this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
+						// if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
+							// continue;
+						this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-							this._Url += "&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch;
+							this._Url += "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
+						else
+							this._Url += "&pa=" + this._RenderObject[key].Id + "/";
+						
 						/* changes by Rohit */
 						if (this._RenderObject[this._ReverseLinks[key][index]].Contrast.length > 0){
-							this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
+							//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
 							for(var ContrastIndex=0;ContrastIndex < this._RenderObject[this._ReverseLinks[key][index]].Contrast.length;ContrastIndex++){
 								if(this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex] == undefined)
 									continue;
-								this._Url += "part=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pair=" + this._RenderObject[key].Id + "&swatch=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex].Swatch + "&grouporderno="+ContrastIndex + "/";
+								this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex].Swatch + "&gon="+ContrastIndex + "/";
 							}
-						}else{
-							this._Url += "&pair=" + this._RenderObject[key].Id + "/";
+						}else if(this._RenderObject[key].Contrast.length > 0){
+								//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
+								for(var ContrastIndex=0;ContrastIndex < this._RenderObject[key].Contrast.length;ContrastIndex++){
+									if(this._RenderObject[key].Contrast[ContrastIndex] == undefined)
+										continue;
+									
+									// For Buttons(Cotrast)
+									//----------------------
+									var flag = false;
+									for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
+										if(this._LibConfig[lkey].Options.indexOf(this._ReverseLinks[key][index]) > -1){
+											for (var key1=0; key1 < this._LibConfig[lkey].Options.length; key1++) {
+												//this._RenderObject[this._LibConfig[key].Options[key1]].Swatch = id
+												if(this._LibConfig[lkey].Options[key1].Swatch != "")
+													flag = true;
+											}
+										}
+									}
+									
+									if(!flag)
+										this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[key].Contrast[ContrastIndex].Swatch + "&gon="+ContrastIndex + "/";
+								}
 						}
 						/* End */
 					}
@@ -642,25 +771,27 @@
 			if (this._IsSpecific)
 				this._Url += "/type=3"
 
-// 				if (this.Option("AutoSpecific"))
-// 					this._IsSpecific = true;
+				//if (this.Option("AutoSpecific"))
+					//this._IsSpecific = true;
 
-			console.log(this._Url);
-			if (this._Url.indexOf("part") === -1) {
+			//console.log(this._Url);
+			if (this._Url.indexOf("p=") === -1) {
 				this._IsSpecific = false;
 				this._createUrl();
-			} else{
-				var url;
+			}else{
+				var url = "";
 				if(this.Option("ImageFormat").toLowerCase() == "png" || this.Option("ImageFormat").toLowerCase() == "p")
-					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url +"&if=png";
+					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&if=png&key="+this.Option("Key");
 				else
-					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url;
+					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key")
 				$.getJSON({
 					url: url,
 					context: this,
 					success: function (data) {
 
-						$(this.Option("ImageSource")).empty();
+						//$(this.Option("ImageSource")).empty();
+						if(this._SelectedAlignment.toLowerCase() == "face" && !this._IsSpecific)
+							this._ImageUrl = this.Option("ServiceUrl") + "/v1/img?" + this._Url+"&key="+this.Option("Key");
 						
 						if(!this._SpecificImageSource)
 							$(this.Option("SpecificImageSource")).empty();
@@ -668,7 +799,10 @@
 						var isAny = false;
 						var className = Date.now();
 						var imagesArray = [];
+						var c = 1;
 						var imgSrc = this.Option("ImageSource");
+						
+						$(imgSrc).find('.TdsNew').removeClass('TdsNew').addClass('TdsOld');
 						
 						var specificimgsrc = this.Option("SpecificImageSource");
 						var spe = false;
@@ -681,7 +815,7 @@
 									if (imgSrc !== undefined) {
 										var h = $(imgSrc).css("height");
 										h = h.replace("px", "");
-										
+
 										if(h == "1" || h == "0")
 											h = "1000";
 										if(this.Option('ImageSize') != "" )
@@ -692,20 +826,24 @@
 											//spe = true;
 											spe = true;
 										}else if(specificimgsrc != "" && !this._SpecificImageSource){
-											$(imgSrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + data[url] + "?h=" + h + "&scale=both'>");
 											$(specificimgsrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
 										}
 										else
-											$(imgSrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + data[url] + "?h=" + h + "&scale=both'>");
 									}
 									imagesArray.push(data[url]);
 									if(specificimgsrc != "" && this._IsSpecific && !this._SpecificRender)
 										isAny = false;
 									else
 										isAny = true;
+									
+									c++;
 								}
 							}
-						
+							
+							
+							
 						if(spe)
 							this._SpecificImageSource = true;
 						
@@ -719,11 +857,32 @@
 							this._IsSpecific = false;
 							this._createUrl();
 						} else {
-							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/v1/img?" + raw + "/type=5");
+							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/v1/img?key="+this.Option("Key") + "&"+ raw + "/type=5");
 							
-							var callback = this.Option("OnRenderImageChange");
-							if (typeof callback == 'function')
-								callback.call(this, imagesArray);
+							var that = this;
+							var loadedImage = 0;
+							
+							$(imgSrc + ' .TdsNew').on('load', function() {
+								//console.log($(this).attr('c')); 
+								loadedImage++;
+								if(loadedImage == $(imgSrc + ' .TdsNew').length){
+									
+									//$(imgSrc + ' .TdsNew').css('opacity','1');
+									for (var i = 0,t=50; i < 1.0; i += 0.1) {
+										that._effect(imgSrc,i.toFixed(1).toString(),t);
+										t =t+50;
+									}
+									//$(imgSrc + ' .TdsOld').remove();
+									loadedImage = 0;
+									
+									var callback = that.Option("OnRenderImageChange");
+									if (typeof callback == 'function')
+									callback.call(that, imagesArray);
+								}
+							}).each(function() {
+							  if(this.complete) $(this).load();
+							});
+							
 						}
 					},
 					fail: function () {}
@@ -731,10 +890,21 @@
 			}
 
 		},
-
+		_effect : function(imgSrc,i,t){
+			setTimeout(function(){
+				$(imgSrc).find('.TdsNew').css('opacity',i);
+				//console.log(i)
+			},t);
+			setTimeout(function(){
+				$(imgSrc).find('.TdsOld').css('opacity',(1.0 - i).toFixed(1));
+				//console.log((1.0 - i).toFixed(1));
+				if((1.0 - i).toFixed(1) == 0.0)
+					$(imgSrc + ' .TdsOld').remove();
+			},t);
+		},
 		_linkingBlocking: function () {
 			$.getJSON({
-				url: this.Option("ServiceUrl") + "/api/products/" + this.Option("Product") + "/link",
+				url: this.Option("ServiceUrl") + "/api/products/" + this.Option("Product") + "/link"+"/"+this.Option("Key"),
 				context: this,
 				success: function (data) {
 					this._Links = data.Link;
@@ -749,7 +919,6 @@
 		},
 
 		_changeAlignment: function ($alignEle) {
-			
 			this._IsAlignmentClick = true;
 			this._IsSpecific = false;
 			this._SpecificImageSource = false;
@@ -800,6 +969,11 @@
 			$("body").off('click', "[data-tds-contrast]");
 			$("body").off('click', "[data-tds-alignment]");
 		},
+		/*_loader: function(){
+			$(this.Option("ImageSource")).find("img").removeClass("new").addClass("old");
+			$(this.Option("ImageSource")).find(".old").css("filter","blur(3px)");
+
+		},*/
 		Product: function (product) {
 
 			this._Url = "";
@@ -876,6 +1050,7 @@
 					this._Color = color;
 			}
 			this._SpecificImageSource = false;
+			//this._IsSpecific = false;
 			this._createUrl();
 
 		},
@@ -910,9 +1085,9 @@
 			var selectedContrast = new Array();
 
 			var selectedTextures = new Array();
-			
+
 			var selectedMonogram = new Array();
-			
+
 			var monogram = false;
 
 			if(this._MonogramPlacement != "" && this._MonogramColor != "" && this._MonogramFont != "" && this._MonogramText != "")
@@ -933,9 +1108,29 @@
 				'Color': this._Color
 			});
 
+
+			for (var key=0; key < this._LibConfig.length;key++){
+				if(this._LibConfig[key].swatch != undefined || this._LibConfig[key].swatch != ""){
+					selectedTextures.push({
+						'Detail' : this._LibConfig[key].Name,
+						'ContrastNo': '0',
+						'FabricId': this._LibConfig[key].Swatch,
+						'Color': this._Color
+					})
+				}
+			}
+
 			for (var key in this._RenderObject) {
+				
+				if (this._CurrentBlockedDetails.indexOf(key) !== -1)
+					continue;
+				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
+					continue;
+				
 				selectedElements.push(this._RenderObject[key].Id);
 				for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
+					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
+						continue;
 					selectedContrast.push({
 						'Detail': key,
 						'ContrastNo': contrastKey,
@@ -950,14 +1145,15 @@
 				"Product": selectedElements,
 				"Contrast": selectedContrast,
 				"Swatch": selectedTextures,
+				"key": this.Option("Key"),
 				"Monogram" : selectedMonogram
 			};
-
+			//console.log(JSON.stringify(a));
 			var returnData = null;
 
 			$.ajax({
 				type: 'POST',
-				url: this.Option("ServiceUrl") + "/api/products",
+				url: this.Option("ServiceUrl") + "/api/products"+"/",
 				data: a,
 				async: false,
 				success: function (data1) {
@@ -985,32 +1181,49 @@
 					'MT': this._MonogramText,
 					'AI': this._CurrentAlignmentIndex
 				};
-				
 
-				var url = this.Option("ServiceUrl") + "/v1/img?" + this._Url;
+
+				var url = this.Option("ServiceUrl") + "/v1/img?" + this._Url + "&key=" + this.Option("Key");
 
 				return {
 					'Data': btoa(JSON.stringify(lookData)),
 					'Url' : url
 				};
-			} 
+			}
 			else if(rawRenderData.toLowerCase() === "image"){
-				var image = null;
+				var image = "";
 				$.ajax({
-					url: this.Option("ServiceUrl") + "/v1/img?" + this._Url,
+					url: this._ImageUrl,
 					type: "GET",
-
 					processData: false,
 					async: false,
-					success: function (result) {
-						image = result;
-					}
+					beforeSend: function (xhr) {
+						xhr.overrideMimeType('text/plain; charset=x-user-defined');
+					},
+					success: function (result, textStatus, jqXHR) {       
+						if(result.length < 1){
+							console.error("The Image doesn't exist");
+							return
+						}
+
+						var binary = "";
+						var responseText = jqXHR.responseText;
+						var responseTextLen = responseText.length;
+
+						for ( i = 0; i < responseTextLen; i++ ) {
+							binary += String.fromCharCode(responseText.charCodeAt(i) & 255)
+						}
+						image = "data:image/png;base64," + btoa(binary);
+					},
+					error: function(xhr, textStatus, errorThrown){
+						console.error("Error in getting document "+textStatus);
+					} 
 				});
 				return image;
 			}
 			else {
 				var lookData = JSON.parse(atob(rawRenderData));
-				//var image = this._dataURItoBlob(rawRenderData);
+
 				this._RenderObject = lookData.RO;
 				this._CurrentBlockedFeatures = lookData.BF;
 				this._CurrentBlockedDetails = lookData.BD;
@@ -1021,7 +1234,6 @@
 				this._MonogramFont = lookData.MF;
 				this._MonogramText = lookData.MT;
 				this._CurrentAlignmentIndex = lookData.AI;
-				this._SpecificImageSource = false;
 				this._createRenderObject("");
 			}
 		},
@@ -1064,8 +1276,10 @@
 		ResetContrast: function () {
 			for (var key in this._RenderObject) {
 				for (var contrastKey=0;contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
-					this._RenderObject[key].Contrast[contrastKey].Swatch = "";
-					this._RenderObject[key].Contrast[contrastKey].Color = "";
+					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
+						continue;
+					this._RenderObject[key].Contrast = [];
+					//this._RenderObject[key].Contrast[contrastKey].Color = "";
 				}
 			}
 			this._createUrl();
@@ -1074,6 +1288,17 @@
 		ResetProduct: function () {
 			this._CurrentBlockedFeatures = Array();
 			this._CurrentBlockedDetails = Array();
+			this._Swatch = "";
+			this._Color = "";
+			this._SelectedAlignment = "face";
+			this._MonogramPlacement = "";
+			this._MonogramColor = "";
+			this._MonogramFont = "";
+			this._MonogramText = "";
+			
+			for (var lkey=0; lkey < this._LibConfig.length;lkey++) 
+				this._LibConfig[lkey].Swatch = "";
+				
 			this._createRenderObject();
 		},
 
@@ -1116,12 +1341,12 @@
 					$("[data-tds-product='" + productDetailArray[dataIndex] + "']").addClass("selected");
 				}
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-						if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") || 
+						if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ||
 									$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ){
 							$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 							$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 							continue;
-						} 
+						}
 
 						$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").remove();
 						$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").remove();
@@ -1132,7 +1357,7 @@
 					}
 					this._IsCustomizeOptions = true;
 					this._CustomizeOptions.push(featureArray);
-					
+
 					var optionarray = [];
 					for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
 						for(var o = 0;o < this._ProductData[dataIndex].Options.length;o++){
@@ -1145,25 +1370,25 @@
 										else
 											optionarray.push(this._ProductData[dataIndex].Options[o].Id);
 									}
-										
+
 								}
 							}
-						}		
+						}
 					}
 					// console.log(optionarray);
 					this._CustomizeOptions.push(optionarray);
 					for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-							if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") || 
+							if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ||
 										$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ){
 								$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 								$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 								continue;
-							} 
+							}
 
 							$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").remove();
 							$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").remove();
 						}
-					
+
 				}else{
 					console.log("null");
 				}
@@ -1187,17 +1412,17 @@
 										else
 											optionarray.push(this._ProductData[dataIndex].Options[o].Id);
 									}
-										
+
 								}
 							}
-						}		
+						}
 					}
-					console.log(optionarray);
+					//console.log(optionarray);
 					for(var dataIndex=0; dataIndex < optionarray.length ; dataIndex++){
 						$("[data-tds-option='" + optionarray[dataIndex] + "']").addClass("selected");
 					}
 					for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-							if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") || 
+							if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ||
 										$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ){
 											for(var o=0 ; o < this._ProductData[dataIndex].Options.length; o++ ){
 												if(!$("[data-tds-option='" + this._ProductData[dataIndex].Options[o].Id + "']").hasClass("selected"))
@@ -1206,7 +1431,7 @@
 													if($("[data-tds-element='" + this._ProductData[dataIndex].Options[o].Features[f].Id + "']").hasClass("selected")){
 														$("[data-tds-element='" + this._ProductData[dataIndex].Options[o].Features[f].Id + "']").removeClass("selected");
 															continue;
-													}	
+													}
 													else{
 															$("[data-tds-element='" + this._ProductData[dataIndex].Options[o].Features[f].Id + "']").remove();
 														}
@@ -1215,7 +1440,7 @@
 								$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 								$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 								continue;
-							} 
+							}
 
 							$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").remove();
 							$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").remove();
@@ -1225,12 +1450,12 @@
 						$("[data-tds-product='" + productDetailArray[dataIndex] + "']").addClass("selected");
 					}
 					for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
-							if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") || 
+							if ($("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ||
 										$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").hasClass("selected") ){
 								$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 								$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").removeClass("selected");
 								continue;
-							} 
+							}
 
 							$("[data-tds-key='" + this._ProductData[dataIndex].Id + "']").remove();
 							$("[data-tds-product='" + this._ProductData[dataIndex].Id + "']").remove();
@@ -1239,9 +1464,9 @@
 					console.log("null");
 				}
 			}
-			
 			return null;
 		},
+
 	};
 
 	function parseColor(color) {
