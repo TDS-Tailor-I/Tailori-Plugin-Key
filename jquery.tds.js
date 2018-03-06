@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.3
+ * jQuery tds.tailori plugin v-3.1 [5d18y/l2.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -55,6 +55,7 @@
 		_SelectedAlignment: "face",
 		_IsCustomizeOptions : false,
 		_CustomizeOptions : [],
+		_SaveLookAlignmentFlag : false,
 
 		defaults: {
 			Product: "Men-Shirt",
@@ -86,7 +87,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-2.3");
+			console.warn("Textronic jquery.tds.js v-3.1 [5d18y/l2.3]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -505,11 +506,12 @@
 						for (var j = 0; j < this._ProductData[i].Options.length; j++) {
 							for (var k = 0; k < this._ProductData[i].Options[j].Features.length; k++) {
 								if (this._ProductData[i].Options[j].Features[k].Id == value) {
-									if(this.Option("AutoAlignment")){
+									if(this.Option("AutoAlignment") && !this._SaveLookAlignmentFlag){
 										this._SelectedAlignment = this._ProductData[i].Options[j].Features[k].Alignment;
 										for(var l=0;l < this._Alignments.length; l++){
-											if(this._SelectedAlignment.toLowerCase() == this._Alignments[l].toLowerCase())
+											if(this._SelectedAlignment.toLowerCase() == this._Alignments[l].toLowerCase()){
 												this._CurrentAlignmentIndex = l;
+											}
 										}
 									}
 									selectedFeatureName = this._ProductData[i].Options[j].Features[k].Name;
@@ -1234,7 +1236,10 @@
 				this._MonogramFont = lookData.MF;
 				this._MonogramText = lookData.MT;
 				this._CurrentAlignmentIndex = lookData.AI;
+				this._SaveLookAlignmentFlag = true; 
+				this._SelectedAlignment = this._Alignments[this._CurrentAlignmentIndex];
 				this._createRenderObject("");
+				this._SaveLookAlignmentFlag = false;
 			}
 		},
 
