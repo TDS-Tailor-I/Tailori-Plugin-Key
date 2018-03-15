@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-3.1 [5d18y/l2.3]
+ * jQuery tds.tailori plugin v-3.2 [15d18y/l3.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -87,7 +87,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-3.1 [5d18y/l2.3]");
+			console.warn("Textronic jquery.tds.js v-3.2 [15d18y/l3.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1300,6 +1300,7 @@
 			this._MonogramColor = "";
 			this._MonogramFont = "";
 			this._MonogramText = "";
+			this._IsSpecific = false;
 			
 			for (var lkey=0; lkey < this._LibConfig.length;lkey++) 
 				this._LibConfig[lkey].Swatch = "";
