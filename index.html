@@ -8,14 +8,14 @@
 <script src = "jquery.tds.js">  </script>
  <script>
 var obj =null;
-var ServiceUrl = "http://textronic.online/tailoriapi";
+var ServiceUrl = "http://textronic.online/TailorIAPI_TDS";
 var UserName = "abc";
 var PassWord = "abc";
-var key = "";
+var key = "2911901356";
 $.ajax({
-  url: ServiceUrl+"/LoginUsers?UserName="+UserName+"&PasswordHash="+PassWord,
+  url: ServiceUrl+"/v1/LoginUsers?UserName="+UserName+"&PasswordHash="+PassWord,
   success: function (data) {
-      key = data;
+      var Key = data;
   }
 });
 var look = null;
@@ -120,7 +120,7 @@ obj.Look(look);
 			'Product':'MEN-shirt',   //Product i.e men shirt,women shirt, men suit, etc
 			'ProductTemplate':'#theTmpl', //Tempalte id for Product
 			'ImageSource':'#img-div', //Container Id for place inages
-			'SpecificImageSource' : "#img-div2",
+			//'SpecificImageSource' : "#img-div2",
 			'ServiceUrl':ServiceUrl,
 			'Key' : key,
 			'AutoSpecific':true, //Auto specific view after selecting any feature
@@ -133,7 +133,7 @@ obj.Look(look);
 				$("#sec").empty();
 				var data= obj.SpecificDetails();
 				$.each(data,function(i,value){
-						$("#sec").append('<li id="'+data[i].Id+'" ><img src="http://textronic.online/WEB_API_TDS/v1/ProductImage?'+data[i].Id+'" width=40 height=40><p>'+data[i].Name+'</p></li>');
+						$("#sec").append('<li id="'+data[i].Id+'" ><img src="'+ServiceUrl+'/v1/ProductImage?key='+key+'&'+data[i].Id+'" width=40 height=40><p>'+data[i].Name+'</p></li>');
 					});	
 					$("#sec").append('<li class="btn btn-primary" id="zoomout" ><a href="#" style="color:#fff">ZOOM OUT</a></li>');
 					$("#sec li").click(function(){	
@@ -188,20 +188,20 @@ obj.Look(look);
 		//obj.Texture("red");	
 		//obj.tailori("SetFabric","ABC");//alert("bye")
 		//
-	//	obj.ChangeLook("");
-	//	obj.ApplyTexture(this.id);	
-	//	obj.ApplyContrastTexture(this.id);
+		//	obj.ChangeLook("");
+		//	obj.ApplyTexture(this.id);	
+		//	obj.ApplyContrastTexture(this.id);
 		
 		
 		//obj._set();
 		$.getJSON({
-				url: ServiceUrl+"/v1/Swatches?Key"+key,				
+				url: ServiceUrl+"/v1/Swatches?key="+key,				
 				success: function (data) {				
 				$("#fabrics").empty();
 				//console.log(data);
 					$.each(data,function(url,value) {
-					$("#fabrics").append('<tr id="'+data[url]+'" ><td><img style="margin-right:10px" src="http://textronic.online/WEB_API_TDS/v1/SwatchImage?'+data[url]+'" width=40 height=40><a href="#">'+url+'</a></td></tr>');
-					$("#fabrics1").append('<tr id="'+data[url]+'" ><td><img style="margin-right:10px" src="http://textronic.online/WEB_API_TDS/v1/SwatchImage?'+data[url]+'" width=40 height=40><a href="#">'+url+'</a></td></tr>');					
+					$("#fabrics").append('<tr id="'+value['Id']+'" ><td><img style="margin-right:10px" src="'+ServiceUrl+'/v1/SwatchImage?key='+key+'&'+value['Id']+'" width=40 height=40><a href="#">'+value['Name']+'</a></td></tr>');
+					$("#fabrics1").append('<tr id="'+value['Id']+'" ><td><img style="margin-right:10px" src="'+ServiceUrl+'/v1/SwatchImage?key='+key+'&'+value['Id']+'" width=40 height=40><a href="#">'+value['Name']+'</a></td></tr>');					
 					});
 					$("#fabrics tr").click(function(){
 				//		alert(this.id);
@@ -224,7 +224,7 @@ obj.Look(look);
 			});
 		
 		$.getJSON({
-				url: ServiceUrl+"/v1/Product",				
+				url: ServiceUrl+"/v1/product?key="+key,				
 				success: function (data) {		
 					var txt = "";
 					$.each(data,function(index,value){
