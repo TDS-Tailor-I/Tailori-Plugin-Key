@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-3.2 [15d18y/l3.1]
+ * jQuery tds.tailori plugin v-3.3 [27d18y/l3.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -43,6 +43,7 @@
 		_MonogramText: "",
 		_SpecificImageSource : false,
 		_SpecificRender : false,
+		_SpecificRenderClick : false,
 		_SpecificDisplay: new Object(),
 		_SpecificLink: new Object(),
 		_SpecificDetails: new Array(),
@@ -87,7 +88,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-3.2 [15d18y/l3.1]");
+			console.warn("Textronic jquery.tds.js v-3.3 [27d18y/l3.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -473,13 +474,32 @@
 						};
 					}
 					
+					//For 1st time Block
+					//------------------
+					// if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[key].Id)) {
+						// for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[key].Id].length;blockedFeature++) {
+							// var feature = this._BlockedFeatures[this._RenderObject[key].Id][blockedFeature];
+							// this._CurrentBlockedFeatures.push(feature);
+							// $("[data-tds-element='" + feature + "']").addClass("block");
+						// }
+					// }
+					
+					if (this._BlockedDetails.hasOwnProperty(this._ProductData[dataIndex].Options[0].Features[0].Id)) {
+						for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._ProductData[dataIndex].Options[0].Features[0].Id].length;blockedDetail++) {
+							var detail = this._BlockedDetails[this._ProductData[dataIndex].Options[0].Features[0].Id][blockedDetail];
+							if(this._CurrentBlockedDetails.indexOf(detail) === -1)
+								this._CurrentBlockedDetails.push(detail);
+							$("[data-tds-key='" + detail + "']").addClass("block");
+						}
+					}
+					//--------
 				}
 
 			} else if (key !== "") {
 
 				var oldValue = this._RenderObject[key].Id;
 				if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[oldValue])) {
-					for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[oldValue].Id].length; blockedFeature++) {
+					for (var blockedFeature in this._BlockedFeatures[this._RenderObject[oldValue].Id]) {
 						var feature = this._CurrentBlockedFeatures[this._RenderObject[key].Id][blockedFeature];
 						this._CurrentBlockedFeatures.pop(feature);
 						$("[data-tds-element='" + feature + "']").removeClass("block");
@@ -487,15 +507,14 @@
 				}
 
 				if (this._BlockedDetails.hasOwnProperty(oldValue)) {
-					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[oldValue].length; blockedDetail++) {
+					for (var blockedDetail in this._BlockedDetails[oldValue]) {
 						var detail = this._BlockedDetails[oldValue][blockedDetail];
 						this._CurrentBlockedDetails.pop(detail);
 						$("[data-tds-key='" + detail + "']").removeClass("block");
 					}
 				}
 
-				this._CurrentBlockedFeatures = Array();
-				this._CurrentBlockedDetails = Array();
+				
 				var selectedDetailName = "";
 				var selectedFeatureName = "";
 				var selectedDetailId = "";
@@ -546,7 +565,8 @@
 				if (this._BlockedFeatures.hasOwnProperty(value)) {
 					for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[value].length;blockedFeature++) {
 						var feature = this._BlockedFeatures[value][blockedFeature];
-						this._CurrentBlockedFeatures.push(feature);
+						if(this._CurrentBlockedFeatures.indexOf(feature) === -1)
+							this._CurrentBlockedFeatures.push(feature);
 						$("[data-tds-element='" + feature + "']").addClass("block");
 					}
 				}
@@ -554,7 +574,8 @@
 				if (this._BlockedDetails.hasOwnProperty(value)) {
 					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[value].length;blockedDetail++) {
 						var detail = this._BlockedDetails[value][blockedDetail];
-						this._CurrentBlockedDetails.push(detail);
+						if(this._CurrentBlockedDetails.indexOf(detail) === -1)
+							this._CurrentBlockedDetails.push(detail);
 						$("[data-tds-key='" + detail + "']").addClass("block");
 					}
 				}
@@ -610,24 +631,7 @@
 				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
 					continue;
 				
-				//For 1st time Block
-				//------------------
-				// if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[key].Id)) {
-					// for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[this._RenderObject[key].Id].length;blockedFeature++) {
-						// var feature = this._BlockedFeatures[this._RenderObject[key].Id][blockedFeature];
-						// this._CurrentBlockedFeatures.push(feature);
-						// $("[data-tds-element='" + feature + "']").addClass("block");
-					// }
-				// }
 				
-				if (this._BlockedDetails.hasOwnProperty(this._RenderObject[key].Id)) {
-					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._RenderObject[key].Id].length;blockedDetail++) {
-						var detail = this._BlockedDetails[this._RenderObject[key].Id][blockedDetail];
-						this._CurrentBlockedDetails.push(detail);
-						$("[data-tds-key='" + detail + "']").addClass("block");
-					}
-				}
-				//--------
 
 				if (this._IsSpecific)
 					if (key !== this._SpecificViewOf && key !== this._SpecificDisplay[this._SpecificViewOf] && this._SpecificDisplay[key] !== this._SpecificViewOf)
@@ -1051,6 +1055,10 @@
 				else
 					this._Color = color;
 			}
+			
+			if(!this._SpecificRenderClick && this._IsSpecific)
+				this._IsSpecific = false;
+			
 			this._SpecificImageSource = false;
 			//this._IsSpecific = false;
 			this._createUrl();
@@ -1075,6 +1083,10 @@
 					Color: color
 				};
 			}
+			
+			if(!this._SpecificRenderClick && this._IsSpecific)
+				this._IsSpecific = false;
+			
 			this._SpecificImageSource = false;
 			this._createUrl();
 
@@ -1263,6 +1275,7 @@
 				return;
 			if (typeof specific == 'boolean') {
 				this._IsSpecific = specific;
+				this._SpecificRenderClick = specific;
 				this._createUrl();
 			} else if (typeof specific == 'string') {
 				for (var i = 0; i < this._ProductData.length; i++) {
@@ -1270,6 +1283,7 @@
 						this._SelectedAlignment = this._ProductData[i].Options[0].Features[0].Alignment;
 				}
 				this._SpecificViewOf = specific;
+				this._SpecificRenderClick = true;
 				this._IsSpecific = true;
 				this._SpecificImageSource = true;
 				this._SpecificRender = true;
