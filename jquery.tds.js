@@ -900,13 +900,17 @@
 			setTimeout(function(){
 				$(imgSrc).find('.TdsNew').css('opacity',i);
 				//console.log(i)
-			},t);
-			setTimeout(function(){
-				$(imgSrc).find('.TdsOld').css('opacity',(1.0 - i).toFixed(1));
-				//console.log((1.0 - i).toFixed(1));
-				if((1.0 - i).toFixed(1) == 0.0)
+				if((1.0 - i).toFixed(1) == 0.0){
 					$(imgSrc + ' .TdsOld').remove();
+				}
+					
 			},t);
+			// setTimeout(function(){
+				// $(imgSrc).find('.TdsOld').css('opacity',(1.0 - i).toFixed(1));
+				////console.log((1.0 - i).toFixed(1));
+				// if((1.0 - i).toFixed(1) == 0.0)
+					// $(imgSrc + ' .TdsOld').remove();
+			// },t);
 		},
 		_linkingBlocking: function () {
 			$.getJSON({
