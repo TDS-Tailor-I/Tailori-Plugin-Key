@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-3.3 [27d18y/l3.2]
+ * jQuery tds.tailori plugin v-4.1 [27d18y/l3.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -88,7 +88,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-3.3 [27d18y/l3.2]");
+			console.warn("Textronic jquery.tds.js v-4.1 [27d18y/l3.3]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -527,6 +527,8 @@
 								if (this._ProductData[i].Options[j].Features[k].Id == value) {
 									if(this.Option("AutoAlignment") && !this._SaveLookAlignmentFlag){
 										this._SelectedAlignment = this._ProductData[i].Options[j].Features[k].Alignment;
+										if(this._SelectedAlignment.length == 0 || this._SelectedAlignment == undefined)
+											this._SelectedAlignment='face';
 										for(var l=0;l < this._Alignments.length; l++){
 											if(this._SelectedAlignment.toLowerCase() == this._Alignments[l].toLowerCase()){
 												this._CurrentAlignmentIndex = l;
