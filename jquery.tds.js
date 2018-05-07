@@ -76,7 +76,7 @@
 			ServiceUrl: "http://localhost:57401",
 			AutoSpecific: true,
 			AutoAlignment: true,
-			ImageSize :"1000",
+			ImageSize :"",
 			ImageFormat : "jpg",
 			OnProductChange: "",
 			OnProductDetailChange: "",
@@ -814,6 +814,7 @@
 						
 						var specificimgsrc = this.Option("SpecificImageSource");
 						var spe = false;
+						var dataUrl = "";
 						
 						if (data.length === 2 && data[0] === "" && data[1].indexOf("Monogram") > 1) {
 							isAny = false;
@@ -821,24 +822,35 @@
 							for (var url=0;url < data.length;url++) {
 								if (data[url] != "") {
 									if (imgSrc !== undefined) {
-										var h = $(imgSrc).css("height");
-										h = h.replace("px", "");
-
-										if(h == "1" || h == "0")
-											h = "1000";
-										if(this.Option('ImageSize') != "" )
-											h= this.Option('ImageSize');
+										
+										dataUrl = data[url];
+										var h = $(imgSrc).height();
+										console.log($(imgSrc).height());
+										//h = h.replace("px", "");
+										
+										if(this.Option('ImageSize') != "" ){
+											if(this.Option('ImageSize').toLowerCase() == 'o' || 
+											this.Option('ImageSize').toLowerCase() == 'original' ||
+											this.Option('ImageSize').toLowerCase() == 'auto')
+												dataUrl = data[url];
+											else
+												dataUrl = data[url] + "?h=" + this.Option('ImageSize') + "&scale=both";
+										}else if(h > 1){
+											dataUrl += "?h=" + h + "&scale=both";
+										}else{
+											dataUrl += "?h=1000&scale=both";
+										}
 										
 										if(this._IsSpecific && specificimgsrc != "" && !this._SpecificImageSource){
-											$(specificimgsrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(specificimgsrc).append("<img src='" + dataUrl + "'>");
 											//spe = true;
 											spe = true;
 										}else if(specificimgsrc != "" && !this._SpecificImageSource){
-											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + data[url] + "?h=" + h + "&scale=both'>");
-											$(specificimgsrc).append("<img src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + dataUrl + "'>");
+											$(specificimgsrc).append("<img src='" + dataUrl + "'>");
 										}
 										else
-											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + data[url] + "?h=" + h + "&scale=both'>");
+											$(imgSrc).append("<img class='TdsNew' style='opacity:0' c="+ c +" src='" + dataUrl + "'>");
 									}
 									imagesArray.push(data[url]);
 									if(specificimgsrc != "" && this._IsSpecific && !this._SpecificRender)
