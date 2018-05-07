@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-4.1 [27d18y/l3.3]
+ * jQuery tds.tailori plugin v-5.1 [07d18y/l4.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -88,7 +88,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-4.1 [27d18y/l3.3]");
+			console.warn("Textronic jquery.tds.js v-5.1 [07d18y/l4.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
