@@ -82,6 +82,7 @@ iii) jquery.tds.js [download](https://github.com/Sagar-TDS/Tailori-Plugin/archiv
 | MonogramPlace                               | Placing area to show Monogram on the apparel.<br />| * <sup><sup>3</sup></sup> |
 | AutoSpecific                                   | If *true* Zoomed view of specific part is automatically rendered *else* not.|         |
 | AutoAlignment                                  | Auto Alignment is the option for Front View and Back View.Boolean values "true" or "false" is used to change the view.<br />For eg. 'AutoAlignment':false, |         |
+| AutoThread                                  | If we want to change button hole and button thread as per button color then set to *true* otherwise set *false*, by default it is *true* | 	|
 | ImageSize                                | ImageSize is the option for specifying Image size.</br> If height & width is specified in #img_div container than it will automatically take containers height.</br> If not, By default the height= 1000px, and width= Auto. To change image size user can manually change it as per requirement. </br> For eg. 'ImageSize':'1000', </br>Or If you want to get original size of image then use 'ImageSize':'original' (o / original / auto)|         |
 
 
