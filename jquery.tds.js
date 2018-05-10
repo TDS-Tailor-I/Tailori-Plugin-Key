@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-5.2 [10d18y/l5.1]
+ * jQuery tds.tailori plugin v-5.3 [10d18y/l5.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -76,6 +76,7 @@
 			ServiceUrl: "http://localhost:57401",
 			AutoSpecific: true,
 			AutoAlignment: true,
+			AutoThread : true,
 			ImageSize :"",
 			ImageFormat : "jpg",
 			OnProductChange: "",
@@ -88,7 +89,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-5.2 [10d18y/l5.1]");
+			console.warn("Textronic jquery.tds.js v-5.3 [10d18y/l5.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -556,7 +557,7 @@
 					}
 				}
 
-				if (selectedDetailName.toLowerCase().indexOf("button") > -1) {
+				if (selectedDetailName.toLowerCase().indexOf("button") > -1 && this.Option('AutoThread')) {
 					// if(selectedDetailName.length == 6){
 						// selectedButton = selectedFeatureName;
 						// buttonId = selectedDetailId;
