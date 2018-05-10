@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-5.1 [07d18y/l4.1]
+ * jQuery tds.tailori plugin v-5.2 [10d18y/l5.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -88,7 +88,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-5.1 [07d18y/l4.1]");
+			console.warn("Textronic jquery.tds.js v-5.2 [10d18y/l5.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -323,6 +323,7 @@
 											});
 										break;
 									}
+									//console.log(options);
 								if (options != null) {
 									if (options.length > 1) {
 										var template1 = $.templates(optionTmpl);
@@ -416,8 +417,21 @@
 					});
 
 					$("body").on("click", "[data-tds-contrast]", function (e) {
-						e.stopPropagation();
-						that._setContrast($(this).attr("data-tds-key"), $(this).attr("data-tds-contrast"));
+						//e.stopPropagation();
+						var key = $(this).attr("data-tds-key"),
+							noContrastFlag=false,
+							contrastNo = $(this).attr("data-tds-contrast");
+							
+						//console.log(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name);
+						
+						if(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
+							that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
+							that._RenderObject[key].Contrast = [];
+							that._createUrl();
+						}else{
+							that._setContrast(key, contrastNo);
+						}	
+						
 						var callback = that.Option("OnContrastChange");
 						if (typeof callback == 'function')
 							callback.call(this);
@@ -825,7 +839,7 @@
 										
 										dataUrl = data[url];
 										var h = $(imgSrc).height();
-										console.log($(imgSrc).height());
+										//console.log($(imgSrc).height());
 										//h = h.replace("px", "");
 										
 										if(this.Option('ImageSize') != "" ){
