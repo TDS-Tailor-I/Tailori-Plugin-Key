@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-5.3 [10d18y/l5.2]
+ * jQuery tds.tailori plugin v-6.1 [05d18y/l5.4]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -41,6 +41,8 @@
 		_MonogramColor: "",
 		_MonogramFont: "",
 		_MonogramText: "",
+		_MonogramAlignment : "face",
+		_MPlacement : Array(),
 		_SpecificImageSource : false,
 		_SpecificRender : false,
 		_SpecificRenderClick : false,
@@ -89,7 +91,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-5.3 [10d18y/l5.2]");
+			console.warn("Textronic jquery.tds.js v-6.1 [05d18y/l5.4]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -112,6 +114,7 @@
 					that._SpecificDetails = data.SpecificDetails;
 					that._ProductData = data.Product;
 					that._LibConfig = data.LibraryConfig;
+					that._MPlacement = data.MonogramPlacement;
 
 					/* changes by Rohit */
 					if(this.Option("AddOnOption")){
@@ -183,16 +186,31 @@
 
 						$("body").on("click", "[data-tds-mplace]", function () {
 							that._MonogramPlacement = $(this).data("tds-mplace");
-
-							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
-							{
-								that._IsSpecific = false;
+							
+							if(that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Name.toLowerCase() == "none" ||
+							that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Name.toLowerCase() == "no monogram"){
+								that._MonogramPlacement = "";
+								that._MonogramFont = "";
+								that._MonogramColor = "" ;
+								that._MonogramText = "";
 								that._createUrl();
-								
-								var callback = that.Option("OnMonogramChange");
-								if (typeof callback == 'function')
-									callback.call(this, $(this).data("tds-option"));
+							}else{
+								if(that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Alignment != undefined)
+								that._MonogramAlignment = that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Alignment;
+		
+							
+								if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
+								{
+									that._IsSpecific = false;
+									that._createUrl();
+									
+									var callback = that.Option("OnMonogramChange");
+									if (typeof callback == 'function')
+										callback.call(this, $(this).data("tds-option"));
+								}
 							}
+							
+							
 						});
 
 						$("body").on("click", "[data-tds-mfont]", function () {
@@ -775,8 +793,10 @@
 			}
 
 			if (this._IsAlignmentClick) {
-				if (this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == "face" || this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == "face open")
+				
+				if(this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == this._MonogramAlignment.toLowerCase())
 					this._Url += monoUrl;
+				
 				this._Url += "view=" + this._Alignments[this._CurrentAlignmentIndex];
 				this._SelectedAlignment = this._Alignments[this._CurrentAlignmentIndex];
 
