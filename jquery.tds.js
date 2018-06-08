@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-6.2 [07d18y/l6.1]
+ * jQuery tds.tailori plugin v-6.3 [08d18y/l6.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -37,6 +37,7 @@
 		_Color: "",
 		_CurrentDetail: "",
 		_CurrentContrastNo: "",
+		_CurrentOption : "",
 		_MonogramPlacement: "",
 		_MonogramColor: "",
 		_MonogramFont: "",
@@ -93,7 +94,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-6.2 [06d18y/l6.1]");
+			console.warn("Textronic jquery.tds.js v-6.3 [08d18y/l6.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -282,6 +283,7 @@
 						e.stopPropagation();
 						var productId = $(this).data("tds-key");
 						var optionId = $(this).data("tds-option");
+						that._CurrentOption = optionId;
 						var featureTmpl = that.Option("FeatureTemplate");
 						var featureUiId = that.Option("FeaturesPlace");
 						if (featureTmpl != "" && featureUiId != "" && productId !== undefined && productId !== "" && optionId !== undefined && optionId !== "") {
@@ -325,10 +327,13 @@
 
 						var callback = that.Option("OnOptionChange");
 						if (typeof callback == 'function')
-							callback.call(this, $(this).data("tds-option"));
+							callback.call(this, $(this).data("tds-option"),that._RenderObject[productId].Id);
 					});
 
 					$("body").on("click", "[data-tds-product]", function () {
+						
+						var selectedId = "";
+						this._CurrentOption = that._RenderObject[$(this).data("tds-product")].OptionId;
 						if (that.Option("IsOptionVisible")) {
 							var productId = $(this).data("tds-product");
 							var optionTmpl = that.Option("OptionTemplate");
@@ -436,7 +441,7 @@
 
 						var callback = that.Option("OnProductDetailChange");
 						if (typeof callback == 'function')
-							callback.call(this, $(this).data("tds-product"));
+							callback.call(this, $(this).data("tds-product"),that._RenderObject[$(this).data("tds-product")].OptionId,that._RenderObject[$(this).data("tds-product")].Id);
 					});
 
 					$("body").on("click", "[data-tds-contrast]", function (e) {
@@ -502,6 +507,7 @@
 						isButton = true;
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
+							OptionId : this._ProductData[dataIndex].Options[0].Id,
 							Swatch: "",
 							Color: "",
 							Contrast: {
@@ -513,6 +519,7 @@
 					}else{
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
+							OptionId : this._ProductData[dataIndex].Options[0].Id,
 							Swatch: "",
 							Color: "",
 							Contrast: {
@@ -612,6 +619,7 @@
 					}
 				}
 				this._RenderObject[key].Id = value;
+				this._RenderObject[key].OptionId = this._CurrentOption;
 
 				if (this._BlockedFeatures.hasOwnProperty(value)) {
 					for (var blockedFeature=0; blockedFeature < this._BlockedFeatures[value].length;blockedFeature++) {
