@@ -123,7 +123,7 @@ obj.Look(look);
 			//'SpecificImageSource' : "#img-div2",
 			'ServiceUrl':ServiceUrl,
 			'Key' : key,
-			//'ImageSize' : '1000', //{Used for set image size & o | auto | original For Original Size Image}
+			'ImageSize' : '1000', //{Used for set image size & o | auto | original For Original Size Image}
 			//'AutoThread' : false, //for auto buttun thread and button hole for button
 			'AutoSpecific':true, //Auto specific view after selecting any feature
 			'AutoAlignment':true, //Auto alignment set according to selected element
@@ -145,7 +145,7 @@ obj.Look(look);
 							obj.SpecificRender(this.id);			
 					});
 				
-				if(!productName.toLowerCase().includes("trouser"))
+				if(obj.Monogram() != null)
 				{
 					$("#specific").show();
 					$("#monoplace").show();

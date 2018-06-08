@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-6.1 [05d18y/l5.4]
+ * jQuery tds.tailori plugin v-6.2 [07d18y/l6.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -42,7 +42,9 @@
 		_MonogramFont: "",
 		_MonogramText: "",
 		_MonogramAlignment : "face",
-		_MPlacement : Array(),
+		_MPlacement : new Array(),
+		_MFont : new Array(),
+		_MColor : new Array(),
 		_SpecificImageSource : false,
 		_SpecificRender : false,
 		_SpecificRenderClick : false,
@@ -91,7 +93,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-6.1 [05d18y/l5.4]");
+			console.warn("Textronic jquery.tds.js v-6.2 [06d18y/l6.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -115,6 +117,8 @@
 					that._ProductData = data.Product;
 					that._LibConfig = data.LibraryConfig;
 					that._MPlacement = data.MonogramPlacement;
+					that._MFont = data.MonogramFont;
+					that._MColor = data.MonogramColor;
 
 					/* changes by Rohit */
 					if(this.Option("AddOnOption")){
@@ -445,7 +449,11 @@
 						
 						if(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
 							that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
-							that._RenderObject[key].Contrast = [];
+							that._RenderObject[key].Contrast = {
+								CSwatch : "",
+								CColor : "",
+								CNo : ""
+							};
 							that._createUrl();
 						}else{
 							that._setContrast(key, contrastNo);
@@ -496,14 +504,22 @@
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
 							Swatch: "",
 							Color: "",
-							Contrast: []
+							Contrast: {
+								CSwatch : "",
+								CColor : "",
+								CNo : ""
+							}
 						};
 					}else{
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
 							Swatch: "",
 							Color: "",
-							Contrast: []
+							Contrast: {
+								CSwatch : "",
+								CColor : "",
+								CNo : ""
+							}
 						};
 					}
 					
@@ -701,12 +717,11 @@
 					this._Url += "p=" + this._RenderObject[key].Id + swatch + "/";
 				else
 					this._Url += "p=" + this._RenderObject[key].Id + "/";
-				if (this._RenderObject[key].Contrast.length > 0) {
-					for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
-						if (this._RenderObject[key].Contrast[contrastKey] === null || this._RenderObject[key].Contrast[contrastKey] === undefined)
-							continue;
-						var cSwatch = this._RenderObject[key].Contrast[contrastKey].Swatch;
-						var cColor = this._RenderObject[key].Contrast[contrastKey].Color;
+				//changes
+				if (this._RenderObject[key].Contrast.CNo != "") {
+					
+						var cSwatch = this._RenderObject[key].Contrast.CSwatch;
+						var cColor = this._RenderObject[key].Contrast.CColor;
 						if (cSwatch !== "" || cColor !== "") {
 
 							/* change by Rohit */
@@ -727,16 +742,16 @@
 								this._Url += "p=" + this._RenderObject[key].Id;
 							}
 							/* End */
-							this._Url += cSwatch != "" ? "&s=" + this._RenderObject[key].Contrast[contrastKey].Swatch : "&s=" + this._RenderObject[key].Contrast[contrastKey].Color;
-							this._Url += "&gon=" + contrastKey + "/";
+							this._Url += cSwatch != "" ? "&s=" + this._RenderObject[key].Contrast.CSwatch : "&s=" + this._RenderObject[key].Contrast.CColor;
+							this._Url += "&gon=" + this._RenderObject[key].Contrast.CNo + "/";
 						}
-					}
+					
 				}
 
 				if (this._ReverseLinks[key] !== undefined) {
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
-						// if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
-							// continue;
+						if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
+							continue;
 						this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
 							this._Url += "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
@@ -744,35 +759,31 @@
 							this._Url += "&pa=" + this._RenderObject[key].Id + "/";
 						
 						/* changes by Rohit */
-						if (this._RenderObject[this._ReverseLinks[key][index]].Contrast.length > 0){
+						if (this._RenderObject[this._ReverseLinks[key][index]].Contrast.CNo != ""){
 							//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
-							for(var ContrastIndex=0;ContrastIndex < this._RenderObject[this._ReverseLinks[key][index]].Contrast.length;ContrastIndex++){
-								if(this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex] == undefined)
-									continue;
-								this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast[ContrastIndex].Swatch + "&gon="+ContrastIndex + "/";
-							}
-						}else if(this._RenderObject[key].Contrast.length > 0){
+							
+							this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast.CSwatch + "&gon="+this._RenderObject[this._ReverseLinks[key][index]].Contrast.CNo + "/";
+							
+						}else if(this._RenderObject[key].Contrast.CNo != ""){
 								//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
-								for(var ContrastIndex=0;ContrastIndex < this._RenderObject[key].Contrast.length;ContrastIndex++){
-									if(this._RenderObject[key].Contrast[ContrastIndex] == undefined)
-										continue;
+								
 									
-									// For Buttons(Cotrast)
-									//----------------------
-									var flag = false;
-									for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
-										if(this._LibConfig[lkey].Options.indexOf(this._ReverseLinks[key][index]) > -1){
-											for (var key1=0; key1 < this._LibConfig[lkey].Options.length; key1++) {
-												//this._RenderObject[this._LibConfig[key].Options[key1]].Swatch = id
-												if(this._LibConfig[lkey].Options[key1].Swatch != "")
-													flag = true;
-											}
+								// For Buttons(Cotrast)
+								//----------------------
+								var flag = false;
+								for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
+									if(this._LibConfig[lkey].Options.indexOf(this._ReverseLinks[key][index]) > -1){
+										for (var key1=0; key1 < this._LibConfig[lkey].Options.length; key1++) {
+											//this._RenderObject[this._LibConfig[key].Options[key1]].Swatch = id
+											if(this._LibConfig[lkey].Options[key1].Swatch != "")
+												flag = true;
 										}
 									}
-									
-									if(!flag)
-										this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[key].Contrast[ContrastIndex].Swatch + "&gon="+ContrastIndex + "/";
 								}
+								
+								if(!flag)
+									this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[key].Contrast.CSwatch + "&gon="+this._RenderObject[key].Contrast.CNo + "/";
+							
 						}
 						/* End */
 					}
@@ -1126,16 +1137,21 @@
 				color = "";
 			else
 				id = "";
-
-			if (this._RenderObject[this._CurrentDetail].Contrast.hasOwnProperty(this._CurrentContrastNo)) {
-				this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo].Swatch = id;
-				this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo].Color = color;
-			} else {
-				this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo] = {
-					Swatch: id,
-					Color: color
-				};
-			}
+			
+			
+			this._RenderObject[this._CurrentDetail].Contrast.CSwatch = id;
+			this._RenderObject[this._CurrentDetail].Contrast.CColor = color;
+			this._RenderObject[this._CurrentDetail].Contrast.CNo = this._CurrentContrastNo;
+		
+			// if (this._RenderObject[this._CurrentDetail].Contrast.hasOwnProperty(this._CurrentContrastNo)) {
+				// this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo].Swatch = id;
+				// this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo].Color = color;
+			// } else {
+				// this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo] = {
+					// Swatch: id,
+					// Color: color
+				// };
+			// }
 			
 			if(!this._SpecificRenderClick && this._IsSpecific)
 				this._IsSpecific = false;
@@ -1195,17 +1211,15 @@
 					continue;
 				
 				selectedElements.push(this._RenderObject[key].Id);
-				for (var contrastKey=0; contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
-					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
-						continue;
-					selectedContrast.push({
-						'Detail': key,
-						'ContrastNo': contrastKey,
-						'FabricId': this._RenderObject[key].Contrast[contrastKey].Swatch,
-						'Color': this._RenderObject[key].Contrast[contrastKey].Color
-					});
+				
+				selectedContrast.push({
+					'Detail': key,
+					'ContrastNo': this._RenderObject[key].Contrast.CNo,
+					'FabricId': this._RenderObject[key].Contrast.CSwatch,
+					'Color': this._RenderObject[key].Contrast.CColor
+				});
 
-				}
+				
 
 			}
 			var a = {
@@ -1346,14 +1360,15 @@
 		},
 
 		ResetContrast: function () {
-			for (var key in this._RenderObject) {
-				for (var contrastKey=0;contrastKey < this._RenderObject[key].Contrast.length;contrastKey++) {
-					if(this._RenderObject[key].Contrast[contrastKey] == undefined)
-						continue;
-					this._RenderObject[key].Contrast = [];
-					//this._RenderObject[key].Contrast[contrastKey].Color = "";
+			
+			for (var key in this._RenderObject){
+				this._RenderObject[key].Contrast = {
+					CSwatch : "",
+					CColor : "",
+					CNo : ""
 				}
 			}
+			
 			this._createUrl();
 		},
 
@@ -1407,6 +1422,21 @@
 
 			return null;
 		},
+		
+		Monogram : function(){
+			
+			if(this._MPlacement.length > 0){
+				var monogram = {
+					"MonogramPlacement" : this._MPlacement,
+					"MonogramFont" : this._MFont,
+					"MonogramColor" : this._MColor
+				}
+				
+				return monogram;
+			}
+			return null;
+		},
+		
 		CustomizeOptions: function (productDetailArray,featureArray) {
 			if(this.Option("IsOptionVisible")){
 				if(productDetailArray != undefined && featureArray == undefined){
