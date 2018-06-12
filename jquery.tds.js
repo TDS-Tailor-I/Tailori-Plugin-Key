@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-6.3 [08d18y/l6.2]
+ * jQuery tds.tailori plugin v-6.4 [12d18y/l6.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -58,7 +58,7 @@
 		_AddOnData : [],
 		_LibConfig: new Object,
 		_IsAlignmentClick: false,
-		_SelectedAlignment: "face",
+		_SelectedAlignment: "FACE",
 		_IsCustomizeOptions : false,
 		_CustomizeOptions : [],
 		_SaveLookAlignmentFlag : false,
@@ -94,7 +94,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-6.3 [08d18y/l6.2]");
+			console.warn("Textronic jquery.tds.js v-6.4 [12d18y/l6.3]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -120,6 +120,8 @@
 					that._MPlacement = data.MonogramPlacement;
 					that._MFont = data.MonogramFont;
 					that._MColor = data.MonogramColor;
+					
+					that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 
 					/* changes by Rohit */
 					if(this.Option("AddOnOption")){
@@ -207,6 +209,8 @@
 								if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 								{
 									that._IsSpecific = false;
+									that._SelectedAlignment = that._MonogramAlignment;
+									that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 									that._createUrl();
 									
 									var callback = that.Option("OnMonogramChange");
@@ -224,6 +228,8 @@
 							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 							{
 								that._IsSpecific = false;
+								that._SelectedAlignment = that._MonogramAlignment;
+								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 								that._createUrl();
 								
 								var callback = that.Option("OnMonogramChange");
@@ -240,6 +246,8 @@
 							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 							{
 								that._IsSpecific = false;
+								that._SelectedAlignment = that._MonogramAlignment;
+								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 								that._createUrl();
 								
 								var callback = that.Option("OnMonogramChange");
@@ -254,6 +262,8 @@
 							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 							{
 								that._IsSpecific = false;
+								that._SelectedAlignment = that._MonogramAlignment;
+								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 								that._createUrl();
 								
 								var callback = that.Option("OnMonogramChange");
@@ -810,11 +820,12 @@
 			if (this._MonogramText !== "" && !this._IsSpecific) {
 				monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
 			}
-
+			
+			if(this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == this._MonogramAlignment.toLowerCase())
+					this._Url += monoUrl;
+					
 			if (this._IsAlignmentClick) {
 				
-				if(this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == this._MonogramAlignment.toLowerCase())
-					this._Url += monoUrl;
 				
 				this._Url += "view=" + this._Alignments[this._CurrentAlignmentIndex];
 				this._SelectedAlignment = this._Alignments[this._CurrentAlignmentIndex];
@@ -822,8 +833,7 @@
 				if (!this._IsSpecific)
 					this._IsAlignmentClick = false;
 			} else {
-				if (this._SelectedAlignment.toLowerCase() == "face" || this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == "face open")
-					this._Url += monoUrl;
+				
 				this._Url += "view=" + this._SelectedAlignment;
 					/*for(var index in this._Alignments)
 					if(this._Alignments[index]==this._SelectedAlignment)
