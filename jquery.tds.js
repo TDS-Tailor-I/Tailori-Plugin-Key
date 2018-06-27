@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-6.4 [12d18y/l6.3]
+ * jQuery tds.tailori plugin v-6.6 [27d18y/l6.5]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -94,7 +94,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-6.4 [12d18y/l6.3]");
+			console.warn("Textronic jquery.tds.js v-6.6 [27d18y/l6.5]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1115,10 +1115,14 @@
 					isFound = true;
 					this._LibConfig[key].Swatch = id;
 				} else {
-					if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") == -1)
-						for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
-							falseArray.push(this._LibConfig[key].Options[key1]);
-						}
+					if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 || 
+						this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1){
+							continue;
+						}else{
+							for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
+								falseArray.push(this._LibConfig[key].Options[key1]);
+							}
+					}
 
 				}
 			}
