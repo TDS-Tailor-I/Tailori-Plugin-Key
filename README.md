@@ -108,7 +108,7 @@ iii) jquery.tds.js [download](https://github.com/Sagar-TDS/Tailori-Plugin/archiv
 | OnFeatureChange      | This callback fires when user clicks on ProductOptions Feature i.e. Half Sleeve, Full Sleeve etc and this callback has one parameter i.e id of ProductOptions Feaure |
 | OnContrastChange     | This callback fires when user clicks on Contrast  |
 | OnRenderImageChange      | This callback fires when rendered images are ready to display i.e. after changing the element when we get result from textronics api, also, this callback has one parameter which array type <br />(*if you want to render image by yourself then use this parameter and then there no need to give <b>ImageSource</b> option in plugin initialization* ) |
-
+| OnLibConfigChange     | This callback fires when user clicks on LibConfig Option i.e. button,tie etc.  |
 
 # Public methods in plugin
 
