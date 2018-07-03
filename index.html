@@ -226,7 +226,7 @@
 				  //-----------------------------------------------------------------------------------------//
 
 				var name = $(this).find("a").text();
-					$("#Lfabrics").find(".panel-heading").html(name + " Fabrics");
+					$("#Lfabrics").find(".panel-heading").html(name);
 
 					$.getJSON({
 					url: ServiceUrl+"/v1/Swatches?key="+key+"&id="+detailID,				
