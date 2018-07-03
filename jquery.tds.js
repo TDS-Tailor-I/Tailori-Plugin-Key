@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-6.6 [27d18y/l6.5]
+ * jQuery tds.tailori plugin v-7.1 [03d18y/l6.6]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -90,6 +90,7 @@
 			OnFeatureChange: "",
 			OnContrastChange: "",
 			OnRenderImageChange: "",
+			OnLibConfigChange : "",
 
 		},
 
@@ -100,7 +101,7 @@
 			this._setCofiguration(this.Option("Product"));
 			return this;
 		},
-
+		
 		_setCofiguration: function (type) {
 			var templateId = this.Option("ProductTemplate");
 			if (templateId == "")
@@ -276,17 +277,32 @@
 
 					$("body").on("click", "[data-tds-element]", function (e) {
 						e.stopPropagation();
+						var IsFound  = false;
 						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
 							console.error("feature is block");
 						} else {
 							that._SpecificViewOf = $(this).attr("data-tds-key");
 							that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
 							that._SpecificImageSource = false;
+							
+							
+							for (key=0; key < that._LibConfig.length;key++) {
+								if(that._LibConfig[key].Options.indexOf(that._SpecificViewOf) > -1){
+									IsFound = true;
+								}
+							}
 						}
-
-						var callback = that.Option("OnFeatureChange");
-						if (typeof callback == 'function')
-							callback.call(this, $(this).data("tds-element"));
+						
+						if(IsFound){
+							var callback = that.Option("OnLibConfigChange");
+							if (typeof callback == 'function')
+								callback.call(this, $(this).data("tds-key"),$(this).data("tds-element"));
+						}else{
+							var callback = that.Option("OnFeatureChange");
+							if (typeof callback == 'function')
+								callback.call(this, $(this).data("tds-element"));
+						}
+						
 					});
 
 					$("body").on("click", "[data-tds-option]", function (e) {
@@ -1590,7 +1606,7 @@
 				}
 			}
 			return null;
-		},
+		}
 
 	};
 
