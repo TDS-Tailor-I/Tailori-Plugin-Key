@@ -95,7 +95,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-6.6 [27d18y/l6.5]");
+			console.warn("Textronic jquery.tds.js v-7.1 [03d18y/l6.6]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
