@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-7.1 [03d18y/l6.6]
+ * jQuery tds.tailori plugin v-7.2 [05d18y/l7.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -28,6 +28,7 @@
 		_DoubleLinks: new Object(),
 		_BlockedFeatures: new Object(),
 		_BlockedDetails: new Object(),
+		_BlockedFabrics: new Object(),
 		_CurrentBlockedFeatures: Array(),
 		_CurrentBlockedDetails: Array(),
 		_RenderObject: new Object(),
@@ -95,7 +96,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-7.1 [03d18y/l6.6]");
+			console.warn("Textronic jquery.tds.js v-7.2 [05d18y/l7.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1016,6 +1017,7 @@
 					this._DoubleLinks = data.DoubleLinking;
 					this._BlockedFeatures = data.Block;
 					this._BlockedDetails = data.BlockDetail;
+					this._BlockedFabrics = data.BlockFabrics;
 					this._createRenderObject();
 				},
 				fail: function () {}
@@ -1121,42 +1123,31 @@
 			}
 
 			var falseArray = new Array();
-			var isFound = false;
+			
 			for (key=0; key < this._LibConfig.length;key++) {
-				var indexOf = this._LibConfig[key].Options.indexOf(this._SpecificViewOf);
-				if (indexOf > -1) {
-					for (var key1=0; key1 < this._LibConfig[key].Options.length; key1++) {
-						this._RenderObject[this._LibConfig[key].Options[key1]].Swatch = id
+				if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 || 
+				this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1){
+					continue;
+				}else{
+					for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
+						falseArray.push(this._LibConfig[key].Options[key1]);
 					}
-					isFound = true;
-					this._LibConfig[key].Swatch = id;
-				} else {
-					if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 || 
-						this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1){
-							continue;
-						}else{
-							for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
-								falseArray.push(this._LibConfig[key].Options[key1]);
-							}
-					}
-
 				}
 			}
 
-			if (!isFound)
-				for (var key in this._RenderObject) {
-					if (falseArray.indexOf(key) === -1) {
-						this._RenderObject[key].Swatch = id
-					}
+			
+			for (var key in this._RenderObject) {
+				if (falseArray.indexOf(key) === -1) {
+					this._RenderObject[key].Swatch = id
 				}
-
-			if (!isFound) {
-				var color = parseColor(id);
-				if (color === undefined)
-					this._Swatch = id;
-				else
-					this._Color = color;
 			}
+
+		
+			var color = parseColor(id);
+			if (color === undefined)
+				this._Swatch = id;
+			else
+				this._Color = color;
 			
 			if(!this._SpecificRenderClick && this._IsSpecific)
 				this._IsSpecific = false;
@@ -1166,7 +1157,6 @@
 			this._createUrl();
 
 		},
-
 		ContrastTexture: function (id) {
 			if (id === undefined)
 				return;
@@ -1198,7 +1188,43 @@
 			this._createUrl();
 
 		},
-
+		
+		LibConfigTexture : function(id){
+			
+			if (id === undefined)
+				return false;
+			var color = parseColor(id);
+			if (color === undefined)
+				color = "";
+			else
+				id = "";
+			
+			var isFound = false;
+			for (var i=0; i < this._LibConfig.length;i++) {
+				var indexOf = this._LibConfig[i].Options.indexOf(this._SpecificViewOf);
+				if (indexOf > -1) {
+					isFound = true;
+					for (var key1=0; key1 < this._LibConfig[i].Options.length; key1++) {
+						this._RenderObject[this._LibConfig[i].Options[key1]].Swatch = id
+					}
+					this._LibConfig[i].Swatch = id;
+				} 
+			}
+			
+			if(isFound){
+				if(!this._SpecificRenderClick && this._IsSpecific)
+				this._IsSpecific = false;
+			
+				this._SpecificImageSource = false;
+				//this._IsSpecific = false;
+				this._createUrl();
+			}else{
+				return false;
+			}
+			
+			
+		},
+		
 		Summary: function () {
 
 			var selectedElements = new Array();
