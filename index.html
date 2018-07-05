@@ -226,7 +226,7 @@
 				  //-----------------------------------------------------------------------------------------//
 
 				var name = $(this).find("a").text();
-					$("#Lfabrics").find(".panel-heading").html(name);
+					$("#Lfabrics").find(".panel-heading").html(name + " Fabrics");
 
 					$.getJSON({
 					url: ServiceUrl+"/v1/Swatches?key="+key+"&id="+detailID,				
@@ -237,11 +237,11 @@
 							$("#Lfabrics table").append('<tr id="'+value['Id']+'" ><td><img style="margin-right:10px" src="'+ServiceUrl+'/v1/SwatchImage?key='+key+'&'+value['Id']+'" width=40 height=40><a href="#">'+value['Name']+'</a></td></tr>');
 						});
 						$("#Lfabrics tr").click(function(){
-							obj.Texture(this.id);	
+							obj.LibConfigTexture(this.id);	
 						});
 
-						$("#fabrics").hide();
-						$("#fabrics1").hide();
+						//$("#fabrics").hide();
+						//$("#fabrics1").hide();
 						$("#Lfabrics").show();
 					},
 					fail: function () {}
@@ -249,32 +249,58 @@
 				}
 				});
 					
-				//========================== Methods ==============================//
+				//======================================================== Methods =============================================================//
 																					
+				/*
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| Sr. |       Method      | Description                                          |                    Example                   |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 1   | Product()         | This method is used for changing(switching) product, | obj.Product("Men-shirt")                     |
+				|     |                   | like men-suit,men-jacket etc                         |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 2   | Texture()         | This method is used for draping full                 |                                              |
+				|     |                   | texture on model.                                    | obj.Texture() (for getting texture)          |
+				|     |                   |                                                      | obj.Texture("red");                          |
+				|     |                   |                                                      | obj.Texture("#ff0000");                      |
+				|     |                   |                                                      | obj.Texture("rgb(255,0,0)");                 |
+				|     |                   |                                                      | obj.Texture("hsl(0, 100%, 50%)");            |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 3   | ContrastTexture() | This method is used for draping texture              |                                              |
+				|     |                   |  on contrast.                                        | obj.ContrastTexture(); (for getting texture) |
+				|     |                   |                                                      | obj.ContrastTexture("red");                  |
+				|     |                   |                                                      | obj.ContrastTexture("#ff0000");              |
+				|     |                   |                                                      | obj.ContrastTexture("rgb(255,0,0)");         |
+				|     |                   |                                                      | obj.ContrastTexture("hsl(0, 100%, 50%)");    |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 4   | SpecificDetails() | This method is use for getting specific details.     | obj.SpecificDetails();                       |
+				|     |                   | You will get Array of Specific Details .             |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 5   | SpecificRender()  | This method is use for getting specific              | obj.SpecificRender(true);                    |
+				|     |                   | rendered image else full rendered image.             |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 6   | Summary()         | This method is use for getting Summay of             | obj.Summary();                               |
+				|     |                   | Product.                                             |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 7   | ResetContrast()   | This method is use for remove all contrast.          | obj.ResetContrast();                         |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 8   | ResetProduct()    | This method is use for reset product.                | obj.ResetProduct();                          |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 9   | Look()            | This method is use for Get or Set Look.              | obj.Look();                                  |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 10  | Options()         | This method is use for getting options of            | obj.Options("158294");                       |
+				|     |                   | product Detail.                                      |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 11  | Features()        | This method is use for getting Features of           | obj.Features("75321598");                    |
+				|     |                   | product Detail.                                      |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 12  | Contrasts()       | This method is use for getting Contrast of           | obj.Contrasts("158294");                     |
+				|     |                   | product Detail.                                      |                                              |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
 				
-				//obj.Product("men-suit");		//Change Product
-				//obj.Summary();				//For get the summery of product
-				//obj.Texture(this.id);			// Set Texture to product i.e fabric id or color value (#ff0000,rgb(255, 0, 0),red,hsl(0, 100%, 50%))
-				//obj.ContrastTexture(this.id);	// Set Texture for contrast
-				//obj.Texture();				// Get Texture of Product
-				//obj.ContrastTexture();		// Get Texture of selected contrast
-				//obj.SpecificRender(true);		// Get if true Specific Rendered Image else full rendered image
-				//obj.ResetContrast();
-				//obj.ResetProduct();
-				//obj.Features();
-				//obj.Options();
-				//obj.Look();
-				//data-tds-moption="text"  
-				//data-tds-alignment =<"next"/"previous"/ alignment Name >
-				//IsOptionVisible
-
-				//obj.Texture("red");	
-				//obj.tailori("SetFabric","ABC");//alert("bye")
-				//
-				//	obj.ChangeLook("");
-				//	obj.ApplyTexture(this.id);	
-				//	obj.ApplyContrastTexture(this.id);
-
+				data-tds-moption="text"  
+				data-tds-alignment =<"next"/"previous"/ alignment Name >
+				IsOptionVisible
+				*/
 
 				//=========================== Gettign Fabrics ===================================//
 

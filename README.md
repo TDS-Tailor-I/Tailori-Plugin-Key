@@ -181,6 +181,25 @@ if you want texture of contrast of apparel call method without passing parameter
 ##### *Note: ContrastTexture applies texture only on last selected contrast*
 ------------------------------------------------
 
+### `LibConfigTexture()`
+Get and Set the Texture (i.e.  fabric or color )  to LibConfig (button,tie,shirt etc.) part of apparel 
+
+if you want apply fabric from textronics fabric library send id of fabric
+```js
+  obj.LibConfigTexture("fab12589");
+```
+
+if you want to apply color as texture 
+```js
+  obj.LibConfigTexture("red"); 
+  obj.LibConfigTexture("#ff0000");  //hex value of color
+  obj.LibConfigTexture("rgb(255,0,0)");  //rgb value of color
+  obj.LibConfigTexture("hsl(0, 100%, 50%)");  //hsl value of color
+```
+
+##### *Note: LibConfigTexture applies texture only on last selected LibConfig feature*
+------------------------------------------------
+
 ### `SpecificDetails()`
 To show specific details of a part, pass id as the parameter. This function will give you an array of name and id.
 
