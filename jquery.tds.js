@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-7.2 [05d18y/l7.1]
+ * jQuery tds.tailori plugin v-8.1 [7d18y/l7.4]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -7,7 +7,7 @@
 ;
 (function ($, window, document, undefined) {
 
-	"use strict";
+    'use strict';
 	var tdsTailoriPlugin = 'tailori';
 
 	function Plugin(element, options) {
@@ -28,14 +28,16 @@
 		_DoubleLinks: new Object(),
 		_BlockedFeatures: new Object(),
 		_BlockedDetails: new Object(),
-		_BlockedFabrics: new Object(),
+		_BlockedFabrics : new Object(),
 		_CurrentBlockedFeatures: Array(),
 		_CurrentBlockedDetails: Array(),
+		_CurrentBlockedFabrics : Array(),
 		_RenderObject: new Object(),
 		_Alignments: new Array(),
 		_CurrentAlignmentIndex: 0,
 		_Swatch: "",
 		_Color: "",
+		_LSwatch : "",
 		_CurrentDetail: "",
 		_CurrentContrastNo: "",
 		_CurrentOption : "",
@@ -96,7 +98,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-7.2 [05d18y/l7.1]");
+			console.warn("Textronic jquery.tds.js v-7.4 [12d18y/l7.3]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -196,16 +198,18 @@
 						$("body").on("click", "[data-tds-mplace]", function () {
 							that._MonogramPlacement = $(this).data("tds-mplace");
 							
-							if(that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Name.toLowerCase() == "none" ||
-							that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Name.toLowerCase() == "no monogram"){
+							
+							if(that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Name.toLowerCase() == "none" ||
+							that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Name.toLowerCase() == "no monogram"){
 								that._MonogramPlacement = "";
 								that._MonogramFont = "";
 								that._MonogramColor = "" ;
 								that._MonogramText = "";
 								that._createUrl();
 							}else{
-								if(that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Alignment != undefined)
-								that._MonogramAlignment = that._MPlacement.filter(x => x.Id === that._MonogramPlacement)[0].Alignment;
+								
+								if(that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Alignment != undefined)
+									that._MonogramAlignment = that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Alignment;
 		
 							
 								if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
@@ -285,7 +289,6 @@
 							that._SpecificViewOf = $(this).attr("data-tds-key");
 							that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
 							that._SpecificImageSource = false;
-							
 							
 							for (key=0; key < that._LibConfig.length;key++) {
 								if(that._LibConfig[key].Options.indexOf(that._SpecificViewOf) > -1){
@@ -479,8 +482,9 @@
 							
 						//console.log(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name);
 						
-						if(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
-							that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
+						
+						if(that._ProductData.filter(function(x){x.Id === key})[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
+							that._ProductData.filter(function(x){x.Id === key})[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
 							that._RenderObject[key].Contrast = {
 								CSwatch : "",
 								CColor : "",
@@ -575,6 +579,12 @@
 							$("[data-tds-key='" + detail + "']").addClass("block");
 						}
 					}
+					
+					/*if(this._BlockedFabrics.hasOwnProperty(this._ProductData[dataIndex].Options[0].Features[0].Id)){
+						for (var blockedFeature in this._BlockedFabrics[this._ProductData[dataIndex].Options[0].Features[0].Id]) {
+							this._CurrentBlockedFabrics.push(this._BlockedFabrics[this._ProductData[dataIndex].Options[0].Features[0].Id][blockedFeature]);
+						}
+					}*/
 					//--------
 				}
 
@@ -596,7 +606,12 @@
 						$("[data-tds-key='" + detail + "']").removeClass("block");
 					}
 				}
-
+				
+				/*if(this._BlockedFabrics.hasOwnProperty(oldValue)){
+					for (var blockedFeature in this._BlockedFabrics[oldValue]) {
+						this._CurrentBlockedFabrics.pop(this._BlockedFabrics[oldValue][blockedFeature]);
+					}
+				}*/
 				
 				var selectedDetailName = "";
 				var selectedFeatureName = "";
@@ -665,8 +680,16 @@
 						$("[data-tds-key='" + detail + "']").addClass("block");
 					}
 				}
+				
+				/*if(this._BlockedFabrics.hasOwnProperty(oldValue)){
+					for (var blockedFeature in this._BlockedFabrics[oldValue]) {
+						this._CurrentBlockedFabrics.push(this._BlockedFabrics[oldValue][blockedFeature]);
+					}
+				}*/
+				
 				//this._createUrl();
 			}
+
 			if(isButton){
 				$.getJSON({
 
@@ -711,6 +734,7 @@
 			//this._loader();
 			this._Url = "";
 
+			//console.log(this._CurrentBlockedFabrics);
 			for (var key in this._RenderObject) {
 				if (this._CurrentBlockedDetails.indexOf(key) !== -1)
 					continue;
@@ -786,6 +810,8 @@
 				if (this._ReverseLinks[key] !== undefined) {
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
 						if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
+							continue;
+						if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id ) !== -1)
 							continue;
 						this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
 						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
@@ -1120,6 +1146,28 @@
 					return this._Color;
 				else
 					return this._Swatch;
+			}else{
+				if(this._CurrentBlockedFabrics.indexOf(id) > -1){
+					console.log("Fabric is Block");
+					return false;
+				}else{
+					var oldValue = this._Swatch;
+					if(oldValue != "" || oldValue != undefined){
+						for(var feature in this._BlockedFabrics){
+							if(this._BlockedFabrics[feature].indexOf(oldValue) > -1){
+								this._CurrentBlockedFeatures.pop(feature);
+								$("[data-tds-element='" + this._BlockedFabrics[feature] + "']").removeClass("block");
+							}
+						}
+					}
+					
+					for(var feature in this._BlockedFabrics){
+						if(this._BlockedFabrics[feature].indexOf(id) > -1){
+							this._CurrentBlockedFeatures.push(feature);
+							$("[data-tds-element='" + this._BlockedFabrics[feature] + "']").addClass("block");
+						}
+					}
+				}
 			}
 
 			var falseArray = new Array();
@@ -1132,6 +1180,7 @@
 					for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
 						falseArray.push(this._LibConfig[key].Options[key1]);
 					}
+
 				}
 			}
 
@@ -1157,6 +1206,7 @@
 			this._createUrl();
 
 		},
+
 		ContrastTexture: function (id) {
 			if (id === undefined)
 				return;
@@ -1191,8 +1241,32 @@
 		
 		LibConfigTexture : function(id){
 			
-			if (id === undefined)
-				return false;
+			if (id === undefined){
+				return this._LSwatch;
+			}else{
+				if(this._CurrentBlockedFabrics.indexOf(id) > -1){
+					console.log("Fabric is Block");
+					return false;
+				}else{
+					var oldValue = this._LSwatch;
+					if(oldValue != "" || oldValue != undefined){
+						for(var feature in this._BlockedFabrics){
+							if(this._BlockedFabrics[feature].indexOf(oldValue) > -1){
+								this._CurrentBlockedFeatures.pop(feature);
+								$("[data-tds-element='" + this._BlockedFabrics[feature] + "']").removeClass("block");
+							}
+						}
+					}
+					
+					for(var feature in this._BlockedFabrics){
+						if(this._BlockedFabrics[feature].indexOf(id) > -1){
+							this._CurrentBlockedFeatures.push(feature);
+							$("[data-tds-element='" + this._BlockedFabrics[feature] + "']").addClass("block");
+						}
+					}
+				}
+			}
+			
 			var color = parseColor(id);
 			if (color === undefined)
 				color = "";
@@ -1217,6 +1291,7 @@
 			
 				this._SpecificImageSource = false;
 				//this._IsSpecific = false;
+				this._LSwatch = id;
 				this._createUrl();
 			}else{
 				return false;
