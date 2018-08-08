@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-8.1 [7d18y/l7.4]
+ * jQuery tds.tailori plugin v-8.2 [8d18y/l8.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.warn("Textronic jquery.tds.js v-7.4 [12d18y/l7.3]");
+			console.info("Textronic jquery.tds.js v-8.2 [8d18y/l8.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -110,9 +110,10 @@
 			if (templateId == "")
 				return;
 
-			$.getJSON({
+			$.ajax({
 				url: this.Option("ServiceUrl") + "/api/products/" + type +"/"+ this.Option("Key"),
 				context: this,
+				dataType : "json",
 				success: function (data) {
 					var that = this;
 					that._Alignments = data.Alignments;
@@ -691,10 +692,10 @@
 			}
 
 			if(isButton){
-				$.getJSON({
+				$.ajax({
 
 					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0], 
-
+					dataType : "json",
 					context: this,
 					success: function (data) {
 						var swatchId;
@@ -899,9 +900,10 @@
 					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&if=png&key="+this.Option("Key");
 				else
 					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key");
-				$.getJSON({
+				$.ajax({
 					url: url,
 					context: this,
+					dataType:"json",
 					success: function (data) {
 
 						//$(this.Option("ImageSource")).empty();
@@ -1034,9 +1036,10 @@
 			// },t);
 		},
 		_linkingBlocking: function () {
-			$.getJSON({
+			$.ajax({
 				url: this.Option("ServiceUrl") + "/api/products/" + this.Option("Product") + "/link"+"/"+this.Option("Key"),
 				context: this,
+				dataType : "json",
 				success: function (data) {
 					this._Links = data.Link;
 					this._ReverseLinks = data.ReverseLink;
