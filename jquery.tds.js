@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-8.2 [8d18y/l8.1]
+ * jQuery tds.tailori plugin v-8.3 [9d18y/l8.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -45,7 +45,7 @@
 		_MonogramColor: "",
 		_MonogramFont: "",
 		_MonogramText: "",
-		_MonogramAlignment : "face",
+		_MonogramAlignment : "FACE",
 		_MPlacement : new Array(),
 		_MFont : new Array(),
 		_MColor : new Array(),
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-8.2 [8d18y/l8.1]");
+			console.info("Textronic jquery.tds.js v-8.3 [9d18y/l8.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -200,8 +200,8 @@
 							that._MonogramPlacement = $(this).data("tds-mplace");
 							
 							
-							if(that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Name.toLowerCase() == "none" ||
-							that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Name.toLowerCase() == "no monogram"){
+							if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "none" ||
+							that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "no monogram"){
 								that._MonogramPlacement = "";
 								that._MonogramFont = "";
 								that._MonogramColor = "" ;
@@ -209,8 +209,8 @@
 								that._createUrl();
 							}else{
 								
-								if(that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Alignment != undefined)
-									that._MonogramAlignment = that._MPlacement.filter(function(x){x.Id === that._MonogramPlacement})[0].Alignment;
+								if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
+									that._MonogramAlignment = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment;
 		
 							
 								if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
@@ -484,8 +484,8 @@
 						//console.log(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name);
 						
 						
-						if(that._ProductData.filter(function(x){x.Id === key})[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
-							that._ProductData.filter(function(x){x.Id === key})[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
+						if(that._ProductData.filter(function(x){if(x.Id === key) return x;})[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
+							that._ProductData.filter(function(x){if(x.Id === key) return x;})[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
 							that._RenderObject[key].Contrast = {
 								CSwatch : "",
 								CColor : "",
@@ -627,7 +627,7 @@
 									if(this.Option("AutoAlignment") && !this._SaveLookAlignmentFlag){
 										this._SelectedAlignment = this._ProductData[i].Options[j].Features[k].Alignment;
 										if(this._SelectedAlignment.length == 0 || this._SelectedAlignment == undefined)
-											this._SelectedAlignment='face';
+											this._SelectedAlignment='FACE';
 										for(var l=0;l < this._Alignments.length; l++){
 											if(this._SelectedAlignment.toLowerCase() == this._Alignments[l].toLowerCase()){
 												this._CurrentAlignmentIndex = l;
@@ -861,11 +861,11 @@
 			}
 
 			var monoUrl = "";
-			if (this._MonogramText !== "" && !this._IsSpecific) {
+			if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "" && !this._IsSpecific) {
 				monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
 			}
 			
-			if(this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == this._MonogramAlignment.toLowerCase())
+			if(this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == this._MonogramAlignment.toLowerCase() && monoUrl != "")
 					this._Url += monoUrl;
 					
 			if (this._IsAlignmentClick) {
@@ -1140,7 +1140,7 @@
 			this._setCofiguration(product, this.Option("ProductTemplate"));
 			this._IsCustomizeOptions = false;
 			this._CustomizeOptions = [];
-			this._SelectedAlignment = "face";
+			this._SelectedAlignment = "FACE";
 		},
 
 		Texture: function (id) {
@@ -1519,7 +1519,7 @@
 			this._CurrentBlockedDetails = Array();
 			this._Swatch = "";
 			this._Color = "";
-			this._SelectedAlignment = "face";
+			this._SelectedAlignment = "FACE";
 			this._MonogramPlacement = "";
 			this._MonogramColor = "";
 			this._MonogramFont = "";
