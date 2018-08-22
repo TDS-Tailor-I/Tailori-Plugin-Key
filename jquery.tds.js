@@ -206,7 +206,7 @@
 								that._MonogramFont = "";
 								that._MonogramColor = "" ;
 								that._MonogramText = "";
-								that._createUrl();
+								that._createUrl(that._RenderObject,true);
 							}else{
 								
 								if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
@@ -218,7 +218,7 @@
 									that._IsSpecific = false;
 									that._SelectedAlignment = that._MonogramAlignment;
 									that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-									that._createUrl();
+									that._createUrl(that._RenderObject,true);
 									
 									var callback = that.Option("OnMonogramChange");
 									if (typeof callback == 'function')
@@ -237,7 +237,7 @@
 								that._IsSpecific = false;
 								that._SelectedAlignment = that._MonogramAlignment;
 								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-								that._createUrl();
+								that._createUrl(that._RenderObject,true);
 								
 								var callback = that.Option("OnMonogramChange");
 								if (typeof callback == 'function')
@@ -255,7 +255,7 @@
 								that._IsSpecific = false;
 								that._SelectedAlignment = that._MonogramAlignment;
 								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-								that._createUrl();
+								that._createUrl(that._RenderObject,true);
 								
 								var callback = that.Option("OnMonogramChange");
 								if (typeof callback == 'function')
@@ -271,7 +271,7 @@
 								that._IsSpecific = false;
 								that._SelectedAlignment = that._MonogramAlignment;
 								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-								that._createUrl();
+								that._createUrl(that._RenderObject,true);
 								
 								var callback = that.Option("OnMonogramChange");
 								if (typeof callback == 'function')
@@ -282,7 +282,7 @@
 					}
 
 					$("body").on("click", "[data-tds-element]", function (e) {
-						e.stopPropagation();
+						//e.stopPropagation();
 						var IsFound  = false;
 						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
 							console.error("feature is block");
@@ -491,7 +491,7 @@
 								CColor : "",
 								CNo : ""
 							};
-							that._createUrl();
+							that._createUrl(that._RenderObject,true);
 						}else{
 							that._setContrast(key, contrastNo);
 						}	
@@ -688,7 +688,7 @@
 					}
 				}*/
 				
-				//this._createUrl();
+				//this._createUrl(this._RenderObject,true);
 			}
 
 			if(isButton){
@@ -716,13 +716,14 @@
 								}
 							}
 						}
-						that._createUrl();
+						that._createUrl(that._RenderObject,true);
 						isButton = false;
 					},
 					fail: function () {}
 				});
 			}else{
-				this._createUrl();
+				this._createUrl(this._RenderObject,true);
+				//this._createUrl(this._RenderObject,true)
 			}
 		},
 
@@ -731,19 +732,19 @@
 			this._CurrentDetail = key;
 		},
 
-		_createUrl: function () {
+		_createUrl: function (RenderObject,IsBlocking,onlycall) {
 			//this._loader();
 			this._Url = "";
 
 			//console.log(this._CurrentBlockedFabrics);
-			for (var key in this._RenderObject) {
-				if (this._CurrentBlockedDetails.indexOf(key) !== -1)
+			for (var key in RenderObject) {
+				if(IsBlocking){
+					if (this._CurrentBlockedDetails.indexOf(key) !== -1)
 					continue;
-				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
-					continue;
+					if (this._CurrentBlockedFeatures.indexOf(RenderObject[key].Id) !== -1)
+						continue;
+				}
 				
-				
-
 				if (this._IsSpecific)
 					if (key !== this._SpecificViewOf && key !== this._SpecificDisplay[this._SpecificViewOf] && this._SpecificDisplay[key] !== this._SpecificViewOf)
 						continue;
@@ -753,10 +754,10 @@
 					}
 
 				var swatch = "";
-				if (this._RenderObject[key].Swatch !== "") {
-					swatch = "&s=" + this._RenderObject[key].Swatch;
-				} else if (this._RenderObject[key].Color !== "") {
-					swatch = "&color=" + this._RenderObject[key].Color;
+				if (RenderObject[key].Swatch !== "") {
+					swatch = "&s=" + RenderObject[key].Swatch;
+				} else if (RenderObject[key].Color !== "") {
+					swatch = "&color=" + RenderObject[key].Color;
 				}
 
 				if (this._DoubleLinks.hasOwnProperty(key)) {
@@ -765,23 +766,23 @@
 
 						for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
 							if (swatch !== "")
-								this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + swatch + "/";
+								this._Url += "p=" + RenderObject[key].Id + "&pa=" + RenderObject[fLink].Id + "&pap=" + RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + swatch + "/";
 							else
-								this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + "/";
+								this._Url += "p=" + RenderObject[key].Id + "&pa=" + RenderObject[fLink].Id + "&pap=" + RenderObject[this._DoubleLinks[key][fLink][dLink]].Id + "/";
 						}
 					}
 
 				}
 
 				if (swatch !== "")
-					this._Url += "p=" + this._RenderObject[key].Id + swatch + "/";
+					this._Url += "p=" + RenderObject[key].Id + swatch + "/";
 				else
-					this._Url += "p=" + this._RenderObject[key].Id + "/";
+					this._Url += "p=" + RenderObject[key].Id + "/";
 				//changes
-				if (this._RenderObject[key].Contrast.CNo != "") {
+				if (RenderObject[key].Contrast.CNo != "") {
 					
-						var cSwatch = this._RenderObject[key].Contrast.CSwatch;
-						var cColor = this._RenderObject[key].Contrast.CColor;
+						var cSwatch = RenderObject[key].Contrast.CSwatch;
+						var cColor = RenderObject[key].Contrast.CColor;
 						if (cSwatch !== "" || cColor !== "") {
 
 							/* change by Rohit */
@@ -791,19 +792,19 @@
 								for (var fLink in this._DoubleLinks[key]) {
 										for (var dLink=0; dLink < this._DoubleLinks[key][fLink].length;dLink++) {
 											if (swatch !== "")
-												this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
+												this._Url += "p=" + RenderObject[key].Id + "&pa=" + RenderObject[fLink].Id + "&pap=" + RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
 											else
-												this._Url += "p=" + this._RenderObject[key].Id + "&pa=" + this._RenderObject[fLink].Id + "&pap=" + this._RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
+												this._Url += "p=" + RenderObject[key].Id + "&pa=" + RenderObject[fLink].Id + "&pap=" + RenderObject[this._DoubleLinks[key][fLink][dLink]].Id;
 										}
 								}
 
 							}
 							else{
-								this._Url += "p=" + this._RenderObject[key].Id;
+								this._Url += "p=" + RenderObject[key].Id;
 							}
 							/* End */
-							this._Url += cSwatch != "" ? "&s=" + this._RenderObject[key].Contrast.CSwatch : "&s=" + this._RenderObject[key].Contrast.CColor;
-							this._Url += "&gon=" + this._RenderObject[key].Contrast.CNo + "/";
+							this._Url += cSwatch != "" ? "&s=" + RenderObject[key].Contrast.CSwatch : "&s=" + RenderObject[key].Contrast.CColor;
+							this._Url += "&gon=" + RenderObject[key].Contrast.CNo + "/";
 						}
 					
 				}
@@ -812,21 +813,21 @@
 					for (var index=0;index < this._ReverseLinks[key].length;index++) {
 						if (this._CurrentBlockedDetails.indexOf(this._ReverseLinks[key][index] ) !== -1)
 							continue;
-						if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[this._ReverseLinks[key][index]].Id ) !== -1)
+						if (this._CurrentBlockedFeatures.indexOf(RenderObject[this._ReverseLinks[key][index]].Id ) !== -1)
 							continue;
-						this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id ;
-						if (this._RenderObject[this._ReverseLinks[key][index]].Swatch != "")
-							this._Url += "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
+						this._Url += "p=" + RenderObject[this._ReverseLinks[key][index]].Id ;
+						if (RenderObject[this._ReverseLinks[key][index]].Swatch != "")
+							this._Url += "&pa=" + RenderObject[key].Id + "&s=" + RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
 						else
-							this._Url += "&pa=" + this._RenderObject[key].Id + "/";
+							this._Url += "&pa=" + RenderObject[key].Id + "/";
 						
 						/* changes by Rohit */
-						if (this._RenderObject[this._ReverseLinks[key][index]].Contrast.CNo != ""){
+						if (RenderObject[this._ReverseLinks[key][index]].Contrast.CNo != ""){
 							//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
 							
-							this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[this._ReverseLinks[key][index]].Contrast.CSwatch + "&gon="+this._RenderObject[this._ReverseLinks[key][index]].Contrast.CNo + "/";
+							this._Url += "p=" + RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + RenderObject[key].Id + "&s=" + RenderObject[this._ReverseLinks[key][index]].Contrast.CSwatch + "&gon="+RenderObject[this._ReverseLinks[key][index]].Contrast.CNo + "/";
 							
-						}else if(this._RenderObject[key].Contrast.CNo != ""){
+						}else if(RenderObject[key].Contrast.CNo != ""){
 								//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
 								
 									
@@ -844,7 +845,7 @@
 								}
 								
 								if(!flag)
-									this._Url += "p=" + this._RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + this._RenderObject[key].Id + "&s=" + this._RenderObject[key].Contrast.CSwatch + "&gon="+this._RenderObject[key].Contrast.CNo + "/";
+									this._Url += "p=" + RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + RenderObject[key].Id + "&s=" + RenderObject[key].Contrast.CSwatch + "&gon="+RenderObject[key].Contrast.CNo + "/";
 							
 						}
 						/* End */
@@ -856,7 +857,7 @@
 				return;
 			else if (this._Url === "" && this._IsSpecific) {
 				this._IsSpecific = false;
-				this._createUrl();
+				this._createUrl(this._RenderObject,true,onlycall);
 				return;
 			}
 
@@ -893,14 +894,17 @@
 			//console.log(this._Url);
 			if (this._Url.indexOf("p=") === -1) {
 				this._IsSpecific = false;
-				this._createUrl();
+				this._createUrl(this._RenderObject,true,onlycall);
 			}else{
 				var url = "";
 				if(this.Option("ImageFormat").toLowerCase() == "png" || this.Option("ImageFormat").toLowerCase() == "p")
 					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&if=png&key="+this.Option("Key");
 				else
 					url = this.Option("ServiceUrl") + "/v1/imgs?" + this._Url+"&key="+this.Option("Key");
-				$.ajax({
+				if(onlycall != undefined){
+					return url;
+				}else{
+					$.ajax({
 					url: url,
 					context: this,
 					dataType:"json",
@@ -984,7 +988,7 @@
 						
 						if (!isAny) {
 							this._IsSpecific = false;
-							this._createUrl();
+							this._createUrl(this._RenderObject,true,onlycall);
 						} else {
 							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/v1/img?key="+this.Option("Key") + "&"+ raw + "/type=5");
 							
@@ -1016,6 +1020,7 @@
 					},
 					fail: function () {}
 				});
+				}
 			}
 
 		},
@@ -1074,7 +1079,7 @@
 						if (this._Alignments[key].toLowerCase() == align)
 							this._CurrentAlignmentIndex = key;
 				}
-			this._createUrl();
+			this._createUrl(this._RenderObject,true);
 		},
 
 		publicMethod: function (foo) {
@@ -1206,7 +1211,7 @@
 			
 			this._SpecificImageSource = false;
 			//this._IsSpecific = false;
-			this._createUrl();
+			this._createUrl(this._RenderObject,true);
 
 		},
 
@@ -1238,7 +1243,7 @@
 				this._IsSpecific = false;
 			
 			this._SpecificImageSource = false;
-			this._createUrl();
+			this._createUrl(this._RenderObject,true);
 
 		},
 		
@@ -1295,7 +1300,7 @@
 				this._SpecificImageSource = false;
 				//this._IsSpecific = false;
 				this._LSwatch = id;
-				this._createUrl();
+				this._createUrl(this._RenderObject,true);
 			}else{
 				return false;
 			}
@@ -1354,15 +1359,14 @@
 				
 				selectedElements.push(this._RenderObject[key].Id);
 				
-				selectedContrast.push({
-					'Detail': key,
-					'ContrastNo': this._RenderObject[key].Contrast.CNo,
-					'FabricId': this._RenderObject[key].Contrast.CSwatch,
-					'Color': this._RenderObject[key].Contrast.CColor
-				});
-
-				
-
+				if(this._RenderObject[key].Contrast.CSwatch != ""){
+					selectedContrast.push({
+						'Detail': key,
+						'ContrastNo': this._RenderObject[key].Contrast.CNo,
+						'FabricId': this._RenderObject[key].Contrast.CSwatch,
+						'Color': this._RenderObject[key].Contrast.CColor
+					});
+				}
 			}
 			var a = {
 				"Product": selectedElements,
@@ -1485,7 +1489,7 @@
 			if (typeof specific == 'boolean') {
 				this._IsSpecific = specific;
 				this._SpecificRenderClick = specific;
-				this._createUrl();
+				this._createUrl(this._RenderObject,true);
 			} else if (typeof specific == 'string') {
 				for (var i = 0; i < this._ProductData.length; i++) {
 					if (this._ProductData[i].Id == specific)
@@ -1496,7 +1500,7 @@
 				this._IsSpecific = true;
 				this._SpecificImageSource = true;
 				this._SpecificRender = true;
-				this._createUrl();
+				this._createUrl(this._RenderObject,true);
 			}
 
 		},
@@ -1511,7 +1515,7 @@
 				}
 			}
 			
-			this._createUrl();
+			this._createUrl(this._RenderObject,true);
 		},
 
 		ResetProduct: function () {
@@ -1710,6 +1714,24 @@
 				}
 			}
 			return null;
+		},
+		GetCall : function(id){
+			
+			
+			var json = JSON.stringify(this._RenderObject);
+			var r = JSON.parse(json);
+			
+			var el = "[data-tds-element='"+id+"']";
+			var key  = $(el).attr("data-tds-key");
+			//this._SpecificViewOf = $(el).attr("data-tds-key");
+			//this._createRenderObject(this._SpecificViewOf, $(el).attr("data-tds-element"));
+			//this._SpecificImageSource = false;
+
+			r[key].Id = id;
+			
+				
+			var url = this._createUrl(r,true,true);
+			return url;
 		}
 
 	};
