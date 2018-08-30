@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-8.4 [22d18y/l8.3]
+ * jQuery tds.tailori plugin v-8.5 [30d18y/l8.4]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-8.4 [22d18y/l8.3]");
+			console.info("Textronic jquery.tds.js v-8.5 [30d18y/l8.4]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -185,6 +185,8 @@
 						}
 					}
 
+					$("[data-tds-hide='true']").hide();
+					
 					var monogram = that.Option("MonogramTemplate");
 
 					if (monogram !== undefined && monogram !== "") {
@@ -284,16 +286,24 @@
 					$("body").on("click", "[data-tds-element]", function (e) {
 						//e.stopPropagation();
 						var IsFound  = false;
-						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
+						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || 
+						that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
 							console.error("feature is block");
 						} else {
-							that._SpecificViewOf = $(this).attr("data-tds-key");
-							that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
-							that._SpecificImageSource = false;
-							
-							for (key=0; key < that._LibConfig.length;key++) {
-								if(that._LibConfig[key].Options.indexOf(that._SpecificViewOf) > -1){
-									IsFound = true;
+							if($(this).attr('data-tds-fabric')){
+								that._SpecificViewOf = $(this).attr("data-tds-key");
+								that._RenderObject[that._SpecificViewOf].Swatch = $(this).attr('data-tds-fabric');
+								that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
+								that._SpecificImageSource = false;
+							}else{
+								that._SpecificViewOf = $(this).attr("data-tds-key");
+								that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
+								that._SpecificImageSource = false;
+								
+								for (key=0; key < that._LibConfig.length;key++) {
+									if(that._LibConfig[key].Options.indexOf(that._SpecificViewOf) > -1){
+										IsFound = true;
+									}
 								}
 							}
 						}
@@ -356,6 +366,7 @@
 							}
 						}
 
+						$("[data-tds-hide='true']").hide();
 						var callback = that.Option("OnOptionChange");
 						if (typeof callback == 'function')
 							callback.call(this, $(this).data("tds-option"),that._RenderObject[productId].Id);
@@ -469,7 +480,8 @@
 								}
 							}
 						}
-
+						
+						$("[data-tds-hide='true']").hide();
 						var callback = that.Option("OnProductDetailChange");
 						if (typeof callback == 'function')
 							callback.call(this, $(this).data("tds-product"),that._RenderObject[$(this).data("tds-product")].OptionId,that._RenderObject[$(this).data("tds-product")].Id);
