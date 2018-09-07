@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-8.5 [30d18y/l8.4]
+ * jQuery tds.tailori plugin v-9.1 [07d18y/l8.5]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-8.5 [30d18y/l8.4]");
+			console.info("Textronic jquery.tds.js v-9.1 [07d18y/l8.5]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -292,7 +292,18 @@
 						} else {
 							if($(this).attr('data-tds-fabric')){
 								that._SpecificViewOf = $(this).attr("data-tds-key");
-								that._RenderObject[that._SpecificViewOf].Swatch = $(this).attr('data-tds-fabric');
+								//that._RenderObject[that._SpecificViewOf].Swatch = $(this).attr('data-tds-fabric');
+								
+								for (var i=0; i < that._LibConfig.length;i++) {
+									var indexOf = that._LibConfig[i].Options.indexOf(that._SpecificViewOf);
+									if (indexOf > -1) {
+										for (var key1=0; key1 < that._LibConfig[i].Options.length; key1++) {
+											that._RenderObject[that._LibConfig[i].Options[key1]].Swatch = $(this).attr('data-tds-fabric')
+										}
+										that._LibConfig[i].Swatch = $(this).attr('data-tds-fabric');
+									}	
+								} 
+								
 								that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
 								that._SpecificImageSource = false;
 							}else{
