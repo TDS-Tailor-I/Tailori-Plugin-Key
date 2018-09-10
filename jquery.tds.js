@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-9.1 [07d18y/l8.5]
+ * jQuery tds.tailori plugin v-9.2 [10d18y/l9.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-9.1 [07d18y/l8.5]");
+			console.info("Textronic jquery.tds.js v-9.2 [10d18y/l9.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1356,6 +1356,7 @@
 
 			selectedTextures.push({
 				'Detail': 'All',
+				'DetailId': [],
 				'ContrastNo': '0',
 				'FabricId': this._Swatch,
 				'Color': this._Color
@@ -1366,6 +1367,7 @@
 				if(this._LibConfig[key].swatch != undefined || this._LibConfig[key].swatch != ""){
 					selectedTextures.push({
 						'Detail' : this._LibConfig[key].Name,
+						'DetailId': this._LibConfig[key].Options,
 						'ContrastNo': '0',
 						'FabricId': this._LibConfig[key].Swatch,
 						'Color': this._Color
