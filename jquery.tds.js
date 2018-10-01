@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-9.3 [18d18y/l9.2]
+ * jQuery tds.tailori plugin v-10.1 [01d18y/l9.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-9.3 [18d18y/l9.2]");
+			console.info("Textronic jquery.tds.js v-10.1 [01d18y/l9.3]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -558,7 +558,7 @@
 						
 						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
 						//buttonId.push(this._ProductData[dataIndex].Id);
-						buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options);
+						buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options.toString());
 						isButton = true;
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
