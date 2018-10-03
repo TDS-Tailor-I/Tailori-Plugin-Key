@@ -146,7 +146,7 @@
 
 				//============================ Callback methods ==============================
 
-				'OnProductChange': function(productName){	
+				'OnProductChange': function(ProductName){	
 	
 					//-----------------------------------------------------------------------------//
 				   // This call back method call when we change  product like men-shirt, men suit //
@@ -176,21 +176,21 @@
 						$("#monoplace").hide();
 					}
 				},
-				'OnProductDetailChange':function(){
+				'OnProductDetailChange':function(DetailId){
 					
 					//------------------------------------------------------------//
 				   // This call back method call when we click/change on Detail  //
 				  //------------------------------------------------------------//
 
 				},
-				'OnOptionChange':function(){
+				'OnOptionChange':function(OptionId){
 					
 					//------------------------------------------------------------//
 				   // This call back method call when we click/change on Option  //
 				  //------------------------------------------------------------//
 
 				},
-				'OnFeatureChange' : function(){
+				'OnFeatureChange' : function(FeatureId){
 
 					//-------------------------------------------------------//
 				   // This call back method call when we click on Features  //
@@ -200,7 +200,7 @@
 					$("#fabrics1").show();
 					$("#Lfabrics").hide();
 				},
-				'OnRenderImageChange':function(a){	
+				'OnRenderImageChange':function(ImageUrls){	
 
 					//--------------------------------------------------------------------------------------//
 				   // This call back method call when all images inside the imagesource loaded completely  //
@@ -219,7 +219,7 @@
 						$(this).addClass("monoselectd-color");
 					});
 				},
-				'OnLibConfigChange' : function(detailID){
+				'OnLibConfigChange' : function(DetailID){
 
 					//-----------------------------------------------------------------------------------------//
 				   // This call back method call when we click on lib config feature like button,tie,trouser  //
@@ -229,7 +229,7 @@
 					$("#Lfabrics").find(".panel-heading").html(name + " Fabrics");
 
 					$.getJSON({
-					url: ServiceUrl+"/v1/Swatches?key="+key+"&id="+detailID,				
+					url: ServiceUrl+"/v1/Swatches?key="+key+"&id="+DetailID,				
 					success: function (data) {				
 						$("#Lfabrics table").empty();
 						//console.log(data);
@@ -296,6 +296,10 @@
 				| 12  | Contrasts()       | This method is use for getting Contrast of           | obj.Contrasts("158294");                     |
 				|     |                   | product Detail.                                      |                                              |
 				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
+				| 13  | SetTexture()      | This method is use to set fabric or color            | obj.SetTexture({DetailId:FabricId});         |
+				|     |                   | to perticular product Detail.                        | obj.SetTexture({"DFBA128E":"88E1355B",       |
+				|     |                   |                                                      |           "2F21CBFC":"2814C56C"});           |
+				+-----+-------------------+------------------------------------------------------+----------------------------------------------+
 				
 				data-tds-moption="text"  
 				data-tds-alignment =<"next"/"previous"/ alignment Name >
@@ -317,7 +321,8 @@
 						//------------ set Fabric event ------//
 						$("#fabrics tr").click(function(){
 						
-							obj.Texture(this.id);	
+							/*if(obj.SetTexture({"DFBA128E":"88E1355B","2F21CBFC":"2814C56C"}))*/
+								obj.Texture(this.id);	
 
 						});
 

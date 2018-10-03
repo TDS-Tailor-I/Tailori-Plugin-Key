@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.1 [01d18y/l9.3]
+ * jQuery tds.tailori plugin v-10.2 [03d18y/l10.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.1 [01d18y/l9.3]");
+			console.info("Textronic jquery.tds.js v-10.2 [03d18y/l10.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1171,7 +1171,7 @@
 			this._SelectedAlignment = "FACE";
 		},
 
-		Texture: function (id) {
+		Texture: function (id,onlyset) {
 			if (id === undefined) {
 				if (this._Swatch === "")
 					return this._Color;
@@ -1234,7 +1234,8 @@
 			
 			this._SpecificImageSource = false;
 			//this._IsSpecific = false;
-			this._createUrl(this._RenderObject,true);
+			if(!onlyset)
+				this._createUrl(this._RenderObject,true);
 
 		},
 
@@ -1270,7 +1271,7 @@
 
 		},
 		
-		LibConfigTexture : function(id){
+		LibConfigTexture : function(id,onlyset){
 			
 			if (id === undefined){
 				return this._LSwatch;
@@ -1304,9 +1305,14 @@
 			else
 				id = "";
 			
+			var Detail = this._SpecificViewOf;
+			
+			if(onlyset)
+				Detail = onlyset;
+			
 			var isFound = false;
 			for (var i=0; i < this._LibConfig.length;i++) {
-				var indexOf = this._LibConfig[i].Options.indexOf(this._SpecificViewOf);
+				var indexOf = this._LibConfig[i].Options.indexOf(Detail);
 				if (indexOf > -1) {
 					isFound = true;
 					for (var key1=0; key1 < this._LibConfig[i].Options.length; key1++) {
@@ -1323,7 +1329,9 @@
 				this._SpecificImageSource = false;
 				//this._IsSpecific = false;
 				this._LSwatch = id;
-				this._createUrl(this._RenderObject,true);
+				
+				if(!onlyset)
+					this._createUrl(this._RenderObject,true);
 			}else{
 				return false;
 			}
@@ -1757,6 +1765,30 @@
 				
 			var url = this._createUrl(r,true,true);
 			return url;
+		},
+		SetTexture : function(fobj){
+			// fobj = {"detailid":"fid"}
+			var that  = this;
+			$.each(fobj,function(DetailId,fid){
+				var isFound = false;
+				for (var i=0; i < that._LibConfig.length;i++) {
+					var indexOf = that._LibConfig[i].Options.indexOf(DetailId);
+					if (indexOf > -1) {
+						for (var key1=0; key1 < that._LibConfig[i].Options.length; key1++) {
+							that._RenderObject[that._LibConfig[i].Options[key1]].Swatch = fid;
+						}
+						that._LibConfig[i].Swatch = fid;
+						isFound = true;
+					}	
+				} 
+				
+				if(isFound)
+					that.LibConfigTexture(fid,DetailId);
+				else
+					that.Texture(fid,true);
+			});
+
+			return true;
 		}
 
 	};
