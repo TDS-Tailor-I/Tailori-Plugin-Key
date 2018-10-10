@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.2 [03d18y/l10.1]
+ * jQuery tds.tailori plugin v-10.3 [10d18y/l10.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.2 [03d18y/l10.1]");
+			console.info("Textronic jquery.tds.js v-10.3 [10d18y/l10.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1205,7 +1205,8 @@
 			
 			for (key=0; key < this._LibConfig.length;key++) {
 				if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 || 
-				this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1){
+				this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1 ||
+				this._LibConfig[key].Name.toLowerCase().indexOf("button holes") > -1){
 					continue;
 				}else{
 					for (var key1 = 0;key1 < this._LibConfig[key].Options.length;key1++) {
