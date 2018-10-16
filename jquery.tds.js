@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.3 [10d18y/l10.2]
+ * jQuery tds.tailori plugin v-10.4 [15d18y/l10.3]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.3 [10d18y/l10.2]");
+			console.info("Textronic jquery.tds.js v-10.4 [15d18y/l10.3]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -558,7 +558,7 @@
 						
 						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
 						//buttonId.push(this._ProductData[dataIndex].Id);
-						buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options.toString());
+						buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options);
 						isButton = true;
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
@@ -717,7 +717,7 @@
 			if(isButton){
 				$.ajax({
 
-					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0], 
+					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0][0], 
 					dataType : "json",
 					context: this,
 					success: function (data) {
@@ -731,10 +731,14 @@
 						if(buttonId.length > 0)
 						{
 							for(var i = 0 ; i < buttonId.length; i++){
-								that._RenderObject[buttonId[i]].Swatch = swatchId;
+								for(var opt = 0;opt < buttonId[i].length;opt++){
+									that._RenderObject[buttonId[i][opt].toString()].Swatch = swatchId;
+								}
 								for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
-									if(this._LibConfig[lkey].Options.indexOf(buttonId[i]) > -1){
-										this._LibConfig[lkey].Swatch = swatchId;
+									for(var opt = 0;opt < buttonId[i].length;opt++){
+										if(this._LibConfig[lkey].Options.indexOf(buttonId[i][opt]) > -1){
+											this._LibConfig[lkey].Swatch = swatchId;
+										}
 									}
 								}
 							}
