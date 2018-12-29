@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.4 [15d18y/l10.3]
+ * jQuery tds.tailori plugin v-10.5 [29d18y/l10.4]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.4 [15d18y/l10.3]");
+			console.info("Textronic jquery.tds.js v-10.5 [29d18y/l10.4]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -361,18 +361,47 @@
 									});
 								$(featureUiId).html(htmlOutput1);
 								if(that._IsCustomizeOptions){
+									var AllFeature = false;
+									var IsFabric = false;
 									if(that._CustomizeOptions[0].length > 0){
 										for(var c=0 ; c < that._CustomizeOptions[0].length; c++){
-											$("[data-tds-element='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+											
+											var Fet = features.filter(function(x){if(x.Id == that._CustomizeOptions[0][c]) return x;});
+											if(Fet.length > 0){
+												AllFeature=true;
+												if(Fet[0].DataAttr.indexOf("data-tds-fabric") > -1)
+													IsFabric = true;
+												else
+													IsFabric = false;
+											}
+
+											if(IsFabric)
+												$("[data-tds-fabric='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+											else
+												$("[data-tds-element='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+
 										}
 										for(var f=0;f < features.length;f++){
-											if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected")){
-												$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
-												continue;
+											
+											if(features[f].DataAttr.indexOf("data-tds-fabric") > -1){
+												if($("[data-tds-fabric='" + features[f].Id + "']").hasClass("selected")){
+													$("[data-tds-fabric='" + features[f].Id + "']").removeClass("selected");
+													continue;
+												}
+												if(AllFeature)
+													$("[data-tds-fabric='" + features[f].Id + "']").remove();
+												
+											}else{
+												if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected") && features[f].DataAttr.indexOf("data-tds-hide") == -1 ){
+													$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
+													continue;
+												}
+												if(AllFeature && features[f].DataAttr.indexOf("data-tds-hide") == -1)
+													$("[data-tds-element='" + features[f].Id + "']").remove();
 											}
-											$("[data-tds-element='" + features[f].Id + "']").remove();
 										}
 									}
+									AllFeature = false;
 								}
 							}
 						}
@@ -438,18 +467,47 @@
 												});
 											$(featureUiId).html(htmlOutput1);
 											if(that._IsCustomizeOptions){
+												var AllFeature = false;
+												var IsFabric = false;
 												if(that._CustomizeOptions[0].length > 0){
 													for(var c=0 ; c < that._CustomizeOptions[0].length; c++){
-														$("[data-tds-element='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+														
+														var Fet = features.filter(function(x){if(x.Id == that._CustomizeOptions[0][c]) return x;});
+														if(Fet.length > 0){
+															AllFeature=true;
+															if(Fet[0].DataAttr.indexOf("data-tds-fabric") > -1)
+																IsFabric = true;
+															else
+																IsFabric = false;
+														}
+
+														if(IsFabric)
+															$("[data-tds-fabric='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+														else
+															$("[data-tds-element='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+
 													}
 													for(var f=0;f < features.length;f++){
-														if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected")){
-															$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
-															continue;
+														
+														if(features[f].DataAttr.indexOf("data-tds-fabric") > -1){
+															if($("[data-tds-fabric='" + features[f].Id + "']").hasClass("selected")){
+																$("[data-tds-fabric='" + features[f].Id + "']").removeClass("selected");
+																continue;
+															}
+															if(AllFeature)
+																$("[data-tds-fabric='" + features[f].Id + "']").remove();
+															
+														}else{
+															if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected") && features[f].DataAttr.indexOf("data-tds-hide") == -1 ){
+																$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
+																continue;
+															}
+															if(AllFeature && features[f].DataAttr.indexOf("data-tds-hide") == -1)
+																$("[data-tds-element='" + features[f].Id + "']").remove();
 														}
-														$("[data-tds-element='" + features[f].Id + "']").remove();
 													}
 												}
+												AllFeature = false;
 											}
 										}
 									}
@@ -475,18 +533,47 @@
 										});
 									$(featureUiId).html(htmlOutput1);
 									if(that._IsCustomizeOptions){
+										var AllFeature = false;
+										var IsFabric = false;
 										if(that._CustomizeOptions[0].length > 0){
 											for(var c=0 ; c < that._CustomizeOptions[0].length; c++){
-												$("[data-tds-element='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+												
+												var Fet = features.filter(function(x){if(x.Id == that._CustomizeOptions[0][c]) return x;});
+												if(Fet.length > 0){
+													AllFeature=true;
+													if(Fet[0].DataAttr.indexOf("data-tds-fabric") > -1)
+														IsFabric = true;
+													else
+														IsFabric = false;
+												}
+
+												if(IsFabric)
+													$("[data-tds-fabric='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+												else
+													$("[data-tds-element='" + that._CustomizeOptions[0][c] + "']").addClass("selected");
+
 											}
 											for(var f=0;f < features.length;f++){
-												if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected")){
-													$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
-													continue;
+												
+												if(features[f].DataAttr.indexOf("data-tds-fabric") > -1){
+													if($("[data-tds-fabric='" + features[f].Id + "']").hasClass("selected")){
+														$("[data-tds-fabric='" + features[f].Id + "']").removeClass("selected");
+														continue;
+													}
+													if(AllFeature)
+														$("[data-tds-fabric='" + features[f].Id + "']").remove();
+													
+												}else{
+													if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected") && features[f].DataAttr.indexOf("data-tds-hide") == -1 ){
+														$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
+														continue;
+													}
+													if(AllFeature && features[f].DataAttr.indexOf("data-tds-hide") == -1)
+														$("[data-tds-element='" + features[f].Id + "']").remove();
 												}
-												$("[data-tds-element='" + features[f].Id + "']").remove();
 											}
 										}
+										AllFeature = false;
 									}
 								}
 							}
