@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.5 [29d18y/l10.4]
+ * jQuery tds.tailori plugin v-1.1 [02d19y/l10.5]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.5 [29d18y/l10.4]");
+			console.info("Textronic jquery.tds.js v-1.1 [02d19y/l10.5]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1842,19 +1842,40 @@
 		},
 		GetCall : function(id){
 			
-			
 			var json = JSON.stringify(this._RenderObject);
 			var r = JSON.parse(json);
 			
-			var el = "[data-tds-element='"+id+"']";
-			var key  = $(el).attr("data-tds-key");
-			//this._SpecificViewOf = $(el).attr("data-tds-key");
-			//this._createRenderObject(this._SpecificViewOf, $(el).attr("data-tds-element"));
-			//this._SpecificImageSource = false;
-
-			r[key].Id = id;
+			var key = "";
+			var IsFabric = false;
 			
-				
+			for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
+				for(var o=0 ; o < this._ProductData[dataIndex].Options.length; o++ ){
+					for(var f=0;f < this._ProductData[dataIndex].Options[o].Features.length;f++ ){
+						if(this._ProductData[dataIndex].Options[o].Features[f].Id == id){
+							if(this._ProductData[dataIndex].Options[o].Features[f].DataAttr.indexOf("data-tds-fabric") > -1){
+								IsFabric = true;
+							}
+							
+							key = this._ProductData[dataIndex].Id;
+						}
+					}
+				}
+			}
+			
+			if(!IsFabric){
+				if(key != "")
+					r[key].Id = id;
+			}else{
+				var color = parseColor(id);
+				if (color === undefined){
+					r[key].Swatch = id;
+					r[key].Color = "";
+				}else{
+					r[key].Swatch = "";
+					r[key].Color = color;
+				}
+			}
+
 			var url = this._createUrl(r,true,true);
 			return url;
 		},
