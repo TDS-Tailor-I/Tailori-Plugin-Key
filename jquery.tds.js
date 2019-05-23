@@ -104,7 +104,7 @@
 			this._setCofiguration(this.Option("Product"));
 			return this;
 		},
-		
+
 		_setCofiguration: function (type) {
 			var templateId = this.Option("ProductTemplate");
 			if (templateId == "")
@@ -125,7 +125,7 @@
 					that._MPlacement = data.MonogramPlacement;
 					that._MFont = data.MonogramFont;
 					that._MColor = data.MonogramColor;
-					
+
 					that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 
 					/* changes by Rohit */
@@ -186,7 +186,7 @@
 					}
 
 					$("[data-tds-hide='true']").hide();
-					
+
 					var monogram = that.Option("MonogramTemplate");
 
 					if (monogram !== undefined && monogram !== "") {
@@ -200,8 +200,8 @@
 
 						$("body").on("click", "[data-tds-mplace]", function () {
 							that._MonogramPlacement = $(this).data("tds-mplace");
-							
-							
+
+
 							if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "none" ||
 							that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "no monogram"){
 								that._MonogramPlacement = "";
@@ -210,25 +210,25 @@
 								that._MonogramText = "";
 								that._createUrl(that._RenderObject,true);
 							}else{
-								
+
 								if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
 									that._MonogramAlignment = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment;
-		
-							
+
+
 								if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "")
 								{
 									that._IsSpecific = false;
 									that._SelectedAlignment = that._MonogramAlignment;
 									that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 									that._createUrl(that._RenderObject,true);
-									
+
 									var callback = that.Option("OnMonogramChange");
 									if (typeof callback == 'function')
 										callback.call(this, $(this).data("tds-option"));
 								}
 							}
-							
-							
+
+
 						});
 
 						$("body").on("click", "[data-tds-mfont]", function () {
@@ -240,7 +240,7 @@
 								that._SelectedAlignment = that._MonogramAlignment;
 								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 								that._createUrl(that._RenderObject,true);
-								
+
 								var callback = that.Option("OnMonogramChange");
 								if (typeof callback == 'function')
 									callback.call(this, $(this).data("tds-option"));
@@ -258,7 +258,7 @@
 								that._SelectedAlignment = that._MonogramAlignment;
 								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 								that._createUrl(that._RenderObject,true);
-								
+
 								var callback = that.Option("OnMonogramChange");
 								if (typeof callback == 'function')
 									callback.call(this, $(this).data("tds-option"));
@@ -274,7 +274,7 @@
 								that._SelectedAlignment = that._MonogramAlignment;
 								that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
 								that._createUrl(that._RenderObject,true);
-								
+
 								var callback = that.Option("OnMonogramChange");
 								if (typeof callback == 'function')
 									callback.call(this, $(this).data("tds-option"));
@@ -286,14 +286,14 @@
 					$("body").on("click", "[data-tds-element]", function (e) {
 						//e.stopPropagation();
 						var IsFound  = false;
-						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 || 
+						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 ||
 						that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
 							console.error("feature is block");
 						} else {
 							if($(this).attr('data-tds-fabric')){
 								that._SpecificViewOf = $(this).attr("data-tds-key");
 								//that._RenderObject[that._SpecificViewOf].Swatch = $(this).attr('data-tds-fabric');
-								
+
 								for (var i=0; i < that._LibConfig.length;i++) {
 									var indexOf = that._LibConfig[i].Options.indexOf(that._SpecificViewOf);
 									if (indexOf > -1) {
@@ -301,16 +301,16 @@
 											that._RenderObject[that._LibConfig[i].Options[key1]].Swatch = $(this).attr('data-tds-fabric')
 										}
 										that._LibConfig[i].Swatch = $(this).attr('data-tds-fabric');
-									}	
-								} 
-								
+									}
+								}
+
 								that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
 								that._SpecificImageSource = false;
 							}else{
 								that._SpecificViewOf = $(this).attr("data-tds-key");
 								that._createRenderObject(that._SpecificViewOf, $(this).attr("data-tds-element"));
 								that._SpecificImageSource = false;
-								
+
 								for (key=0; key < that._LibConfig.length;key++) {
 									if(that._LibConfig[key].Options.indexOf(that._SpecificViewOf) > -1){
 										IsFound = true;
@@ -318,7 +318,7 @@
 								}
 							}
 						}
-						
+
 						if(IsFound){
 							var callback = that.Option("OnLibConfigChange");
 							if (typeof callback == 'function')
@@ -328,7 +328,7 @@
 							if (typeof callback == 'function')
 								callback.call(this, $(this).data("tds-element"));
 						}
-						
+
 					});
 
 					$("body").on("click", "[data-tds-option]", function (e) {
@@ -365,7 +365,7 @@
 									var IsFabric = false;
 									if(that._CustomizeOptions[0].length > 0){
 										for(var c=0 ; c < that._CustomizeOptions[0].length; c++){
-											
+
 											var Fet = features.filter(function(x){if(x.Id == that._CustomizeOptions[0][c]) return x;});
 											if(Fet.length > 0){
 												AllFeature=true;
@@ -382,7 +382,7 @@
 
 										}
 										for(var f=0;f < features.length;f++){
-											
+
 											if(features[f].DataAttr.indexOf("data-tds-fabric") > -1){
 												if($("[data-tds-fabric='" + features[f].Id + "']").hasClass("selected")){
 													$("[data-tds-fabric='" + features[f].Id + "']").removeClass("selected");
@@ -390,7 +390,7 @@
 												}
 												if(AllFeature)
 													$("[data-tds-fabric='" + features[f].Id + "']").remove();
-												
+
 											}else{
 												if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected") && features[f].DataAttr.indexOf("data-tds-hide") == -1 ){
 													$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
@@ -413,7 +413,7 @@
 					});
 
 					$("body").on("click", "[data-tds-product]", function () {
-						
+
 						var selectedId = "";
 						this._CurrentOption = that._RenderObject[$(this).data("tds-product")].OptionId;
 						if (that.Option("IsOptionVisible")) {
@@ -471,7 +471,7 @@
 												var IsFabric = false;
 												if(that._CustomizeOptions[0].length > 0){
 													for(var c=0 ; c < that._CustomizeOptions[0].length; c++){
-														
+
 														var Fet = features.filter(function(x){if(x.Id == that._CustomizeOptions[0][c]) return x;});
 														if(Fet.length > 0){
 															AllFeature=true;
@@ -488,7 +488,7 @@
 
 													}
 													for(var f=0;f < features.length;f++){
-														
+
 														if(features[f].DataAttr.indexOf("data-tds-fabric") > -1){
 															if($("[data-tds-fabric='" + features[f].Id + "']").hasClass("selected")){
 																$("[data-tds-fabric='" + features[f].Id + "']").removeClass("selected");
@@ -496,7 +496,7 @@
 															}
 															if(AllFeature)
 																$("[data-tds-fabric='" + features[f].Id + "']").remove();
-															
+
 														}else{
 															if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected") && features[f].DataAttr.indexOf("data-tds-hide") == -1 ){
 																$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
@@ -537,7 +537,7 @@
 										var IsFabric = false;
 										if(that._CustomizeOptions[0].length > 0){
 											for(var c=0 ; c < that._CustomizeOptions[0].length; c++){
-												
+
 												var Fet = features.filter(function(x){if(x.Id == that._CustomizeOptions[0][c]) return x;});
 												if(Fet.length > 0){
 													AllFeature=true;
@@ -554,7 +554,7 @@
 
 											}
 											for(var f=0;f < features.length;f++){
-												
+
 												if(features[f].DataAttr.indexOf("data-tds-fabric") > -1){
 													if($("[data-tds-fabric='" + features[f].Id + "']").hasClass("selected")){
 														$("[data-tds-fabric='" + features[f].Id + "']").removeClass("selected");
@@ -562,7 +562,7 @@
 													}
 													if(AllFeature)
 														$("[data-tds-fabric='" + features[f].Id + "']").remove();
-													
+
 												}else{
 													if($("[data-tds-element='" + features[f].Id + "']").hasClass("selected") && features[f].DataAttr.indexOf("data-tds-hide") == -1 ){
 														$("[data-tds-element='" + features[f].Id + "']").removeClass("selected");
@@ -578,7 +578,7 @@
 								}
 							}
 						}
-						
+
 						$("[data-tds-hide='true']").hide();
 						var callback = that.Option("OnProductDetailChange");
 						if (typeof callback == 'function')
@@ -590,10 +590,10 @@
 						var key = $(this).attr("data-tds-key"),
 							noContrastFlag=false,
 							contrastNo = $(this).attr("data-tds-contrast");
-							
+
 						//console.log(that._ProductData.filter(x => x.Id === key)[0].Contrasts[contrastNo].Name);
-						
-						
+
+
 						if(that._ProductData.filter(function(x){if(x.Id === key) return x;})[0].Contrasts[contrastNo].Name.toLowerCase() == 'no contrast' ||
 							that._ProductData.filter(function(x){if(x.Id === key) return x;})[0].Contrasts[contrastNo].Name.toLowerCase() == 'none'){
 							that._RenderObject[key].Contrast = {
@@ -604,8 +604,8 @@
 							that._createUrl(that._RenderObject,true);
 						}else{
 							that._setContrast(key, contrastNo);
-						}	
-						
+						}
+
 						var callback = that.Option("OnContrastChange");
 						if (typeof callback == 'function')
 							callback.call(this);
@@ -631,7 +631,7 @@
 				isButton = false,
 				buttonId = new Array();
 			if (key === undefined) {
-				
+
 				var LibconfigName = new Array();
 				for(var l = 0 ; l < that._LibConfig.length ; l++){
 					if(that._LibConfig[l] == undefined)
@@ -642,7 +642,7 @@
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
 					if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1 &&
 					LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase()) > -1){
-						
+
 						selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
 						//buttonId.push(this._ProductData[dataIndex].Id);
 						buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options);
@@ -671,7 +671,7 @@
 							}
 						};
 					}
-					
+
 					//For 1st time Block
 					//------------------
 					// if (this._BlockedFeatures.hasOwnProperty(this._RenderObject[key].Id)) {
@@ -681,7 +681,7 @@
 							// $("[data-tds-element='" + feature + "']").addClass("block");
 						// }
 					// }
-					
+
 					if (this._BlockedDetails.hasOwnProperty(this._ProductData[dataIndex].Options[0].Features[0].Id)) {
 						for (var blockedDetail=0; blockedDetail < this._BlockedDetails[this._ProductData[dataIndex].Options[0].Features[0].Id].length;blockedDetail++) {
 							var detail = this._BlockedDetails[this._ProductData[dataIndex].Options[0].Features[0].Id][blockedDetail];
@@ -690,7 +690,7 @@
 							$("[data-tds-key='" + detail + "']").addClass("block");
 						}
 					}
-					
+
 					/*if(this._BlockedFabrics.hasOwnProperty(this._ProductData[dataIndex].Options[0].Features[0].Id)){
 						for (var blockedFeature in this._BlockedFabrics[this._ProductData[dataIndex].Options[0].Features[0].Id]) {
 							this._CurrentBlockedFabrics.push(this._BlockedFabrics[this._ProductData[dataIndex].Options[0].Features[0].Id][blockedFeature]);
@@ -717,13 +717,13 @@
 						$("[data-tds-key='" + detail + "']").removeClass("block");
 					}
 				}
-				
+
 				/*if(this._BlockedFabrics.hasOwnProperty(oldValue)){
 					for (var blockedFeature in this._BlockedFabrics[oldValue]) {
 						this._CurrentBlockedFabrics.pop(this._BlockedFabrics[oldValue][blockedFeature]);
 					}
 				}*/
-				
+
 				var selectedDetailName = "";
 				var selectedFeatureName = "";
 				var selectedDetailId = "";
@@ -791,20 +791,20 @@
 						$("[data-tds-key='" + detail + "']").addClass("block");
 					}
 				}
-				
+
 				/*if(this._BlockedFabrics.hasOwnProperty(oldValue)){
 					for (var blockedFeature in this._BlockedFabrics[oldValue]) {
 						this._CurrentBlockedFabrics.push(this._BlockedFabrics[oldValue][blockedFeature]);
 					}
 				}*/
-				
+
 				//this._createUrl(this._RenderObject,true);
 			}
 
 			if(isButton){
 				$.ajax({
 
-					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0][0], 
+					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0][0],
 					dataType : "json",
 					context: this,
 					success: function (data) {
@@ -858,7 +858,7 @@
 					if (this._CurrentBlockedFeatures.indexOf(RenderObject[key].Id) !== -1)
 						continue;
 				}
-				
+
 				if (this._IsSpecific)
 					if (key !== this._SpecificViewOf && key !== this._SpecificDisplay[this._SpecificViewOf] && this._SpecificDisplay[key] !== this._SpecificViewOf)
 						continue;
@@ -894,7 +894,7 @@
 					this._Url += "p=" + RenderObject[key].Id + "/";
 				//changes
 				if (RenderObject[key].Contrast.CNo != "") {
-					
+
 						var cSwatch = RenderObject[key].Contrast.CSwatch;
 						var cColor = RenderObject[key].Contrast.CColor;
 						if (cSwatch !== "" || cColor !== "") {
@@ -920,7 +920,7 @@
 							this._Url += cSwatch != "" ? "&s=" + RenderObject[key].Contrast.CSwatch : "&s=" + RenderObject[key].Contrast.CColor;
 							this._Url += "&gon=" + RenderObject[key].Contrast.CNo + "/";
 						}
-					
+
 				}
 
 				if (this._ReverseLinks[key] !== undefined) {
@@ -934,17 +934,17 @@
 							this._Url += "&pa=" + RenderObject[key].Id + "&s=" + RenderObject[this._ReverseLinks[key][index]].Swatch+ "/";
 						else
 							this._Url += "&pa=" + RenderObject[key].Id + "/";
-						
+
 						/* changes by Rohit */
 						if (RenderObject[this._ReverseLinks[key][index]].Contrast.CNo != ""){
 							//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
-							
+
 							this._Url += "p=" + RenderObject[this._ReverseLinks[key][index]].Id+"&pa=" + RenderObject[key].Id + "&s=" + RenderObject[this._ReverseLinks[key][index]].Contrast.CSwatch + "&gon="+RenderObject[this._ReverseLinks[key][index]].Contrast.CNo + "/";
-							
+
 						}else if(RenderObject[key].Contrast.CNo != ""){
 								//this._Url  += "&pair=" + this._RenderObject[key].Id + "/";
-								
-									
+
+
 								// For Buttons(Cotrast)
 								//----------------------
 								var flag = false;
@@ -957,10 +957,10 @@
 										}
 									}
 								}
-								
+
 								if(!flag)
 									this._Url += "p=" + RenderObject[this._ReverseLinks[key][index]].Id + "&pa=" + RenderObject[key].Id + "&s=" + RenderObject[key].Contrast.CSwatch + "&gon="+RenderObject[key].Contrast.CNo + "/";
-							
+
 						}
 						/* End */
 					}
@@ -979,20 +979,20 @@
 			if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "" && !this._IsSpecific) {
 				monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
 			}
-			
+
 			if(this._Alignments[this._CurrentAlignmentIndex].toLowerCase() == this._MonogramAlignment.toLowerCase() && monoUrl != "")
 					this._Url += monoUrl;
-					
+
 			if (this._IsAlignmentClick) {
-				
-				
+
+
 				this._Url += "view=" + this._Alignments[this._CurrentAlignmentIndex];
 				this._SelectedAlignment = this._Alignments[this._CurrentAlignmentIndex];
 
 				if (!this._IsSpecific)
 					this._IsAlignmentClick = false;
 			} else {
-				
+
 				this._Url += "view=" + this._SelectedAlignment;
 					/*for(var index in this._Alignments)
 					if(this._Alignments[index]==this._SelectedAlignment)
@@ -1027,36 +1027,36 @@
 						//$(this.Option("ImageSource")).empty();
 						if(this._SelectedAlignment.toLowerCase() == "face" && !this._IsSpecific)
 							this._ImageUrl = this.Option("ServiceUrl") + "/v1/img?" + this._Url+"&key="+this.Option("Key");
-						
+
 						if(!this._SpecificImageSource)
 							$(this.Option("SpecificImageSource")).empty();
-						
+
 						var isAny = false;
 						var className = Date.now();
 						var imagesArray = [];
 						var c = 1;
 						var imgSrc = this.Option("ImageSource");
-						
+
 						$(imgSrc).find('.TdsNew').removeClass('TdsNew').addClass('TdsOld');
-						
+
 						var specificimgsrc = this.Option("SpecificImageSource");
 						var spe = false;
 						var dataUrl = "";
-						
+
 						if (data.length === 2 && data[0] === "" && data[1].indexOf("Monogram") > 1) {
 							isAny = false;
 						} else
 							for (var url=0;url < data.length;url++) {
 								if (data[url] != "") {
 									if (imgSrc !== undefined) {
-										
+
 										dataUrl = data[url];
 										var h = $(imgSrc).height();
 										//console.log($(imgSrc).height());
 										//h = h.replace("px", "");
-										
+
 										if(this.Option('ImageSize') != "" ){
-											if(this.Option('ImageSize').toLowerCase() == 'o' || 
+											if(this.Option('ImageSize').toLowerCase() == 'o' ||
 											this.Option('ImageSize').toLowerCase() == 'original' ||
 											this.Option('ImageSize').toLowerCase() == 'auto')
 												dataUrl = data[url];
@@ -1067,7 +1067,7 @@
 										}else{
 											dataUrl += "?h=1000&scale=both";
 										}
-										
+
 										if(this._IsSpecific && specificimgsrc != "" && !this._SpecificImageSource){
 											$(specificimgsrc).append("<img src='" + dataUrl + "'>");
 											//spe = true;
@@ -1084,36 +1084,36 @@
 										isAny = false;
 									else
 										isAny = true;
-									
+
 									c++;
 								}
 							}
-							
-							
-							
+
+
+
 						if(spe)
 							this._SpecificImageSource = true;
-						
+
 						if (this.Option("AutoSpecific"))
 							this._IsSpecific = true;
-						
+
 						if(this._SpecificRender)
 							this._SpecificRender = false;
-						
+
 						if (!isAny) {
 							this._IsSpecific = false;
 							this._createUrl(this._RenderObject,true,onlycall);
 						} else {
 							$(imgSrc + " img:last").attr("data-zoom-image", this.Option("ServiceUrl") + "/v1/img?key="+this.Option("Key") + "&"+ raw + "/type=5");
-							
+
 							var that = this;
 							var loadedImage = 0;
-							
+
 							$(imgSrc + ' .TdsNew').on('load', function() {
-								//console.log($(this).attr('c')); 
+								//console.log($(this).attr('c'));
 								loadedImage++;
 								if(loadedImage == $(imgSrc + ' .TdsNew').length){
-									
+
 									//$(imgSrc + ' .TdsNew').css('opacity','1');
 									for (var i = 0,t=50; i < 1.0; i += 0.1) {
 										that._effect(imgSrc,i.toFixed(1).toString(),t);
@@ -1121,7 +1121,7 @@
 									}
 									//$(imgSrc + ' .TdsOld').remove();
 									loadedImage = 0;
-									
+
 									var callback = that.Option("OnRenderImageChange");
 									if (typeof callback == 'function')
 									callback.call(that, imagesArray);
@@ -1129,7 +1129,7 @@
 							}).each(function() {
 							  if(this.complete) $(this).load();
 							});
-							
+
 						}
 					},
 					fail: function () {}
@@ -1145,7 +1145,7 @@
 				if((1.0 - i).toFixed(1) == 0.0){
 					$(imgSrc + ' .TdsOld').remove();
 				}
-					
+
 			},t);
 			// setTimeout(function(){
 				// $(imgSrc).find('.TdsOld').css('opacity',(1.0 - i).toFixed(1));
@@ -1282,7 +1282,7 @@
 							}
 						}
 					}
-					
+
 					for(var feature in this._BlockedFabrics){
 						if(this._BlockedFabrics[feature].indexOf(id) > -1){
 							this._CurrentBlockedFeatures.push(feature);
@@ -1293,9 +1293,9 @@
 			}
 
 			var falseArray = new Array();
-			
+
 			for (key=0; key < this._LibConfig.length;key++) {
-				if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 || 
+				if (this._LibConfig[key].Name.toLowerCase().indexOf("waist") > -1 ||
 				this._LibConfig[key].Name.toLowerCase().indexOf("trouser") > -1 ||
 				this._LibConfig[key].Name.toLowerCase().indexOf("button holes") > -1){
 					continue;
@@ -1307,23 +1307,23 @@
 				}
 			}
 
-			
+
 			for (var key in this._RenderObject) {
 				if (falseArray.indexOf(key) === -1) {
 					this._RenderObject[key].Swatch = id
 				}
 			}
 
-		
+
 			var color = parseColor(id);
 			if (color === undefined)
 				this._Swatch = id;
 			else
 				this._Color = color;
-			
+
 			if(!this._SpecificRenderClick && this._IsSpecific)
 				this._IsSpecific = false;
-			
+
 			this._SpecificImageSource = false;
 			//this._IsSpecific = false;
 			if(!onlyset)
@@ -1339,12 +1339,12 @@
 				color = "";
 			else
 				id = "";
-			
-			
+
+
 			this._RenderObject[this._CurrentDetail].Contrast.CSwatch = id;
 			this._RenderObject[this._CurrentDetail].Contrast.CColor = color;
 			this._RenderObject[this._CurrentDetail].Contrast.CNo = this._CurrentContrastNo;
-		
+
 			// if (this._RenderObject[this._CurrentDetail].Contrast.hasOwnProperty(this._CurrentContrastNo)) {
 				// this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo].Swatch = id;
 				// this._RenderObject[this._CurrentDetail].Contrast[this._CurrentContrastNo].Color = color;
@@ -1354,17 +1354,17 @@
 					// Color: color
 				// };
 			// }
-			
+
 			if(!this._SpecificRenderClick && this._IsSpecific)
 				this._IsSpecific = false;
-			
+
 			this._SpecificImageSource = false;
 			this._createUrl(this._RenderObject,true);
 
 		},
-		
+
 		LibConfigTexture : function(id,onlyset){
-			
+
 			if (id === undefined){
 				return this._LSwatch;
 			}else{
@@ -1381,7 +1381,7 @@
 							}
 						}
 					}
-					
+
 					for(var feature in this._BlockedFabrics){
 						if(this._BlockedFabrics[feature].indexOf(id) > -1){
 							this._CurrentBlockedFeatures.push(feature);
@@ -1390,18 +1390,18 @@
 					}
 				}
 			}
-			
+
 			var color = parseColor(id);
 			if (color === undefined)
 				color = "";
 			else
 				id = "";
-			
+
 			var Detail = this._SpecificViewOf;
-			
+
 			if(onlyset)
 				Detail = onlyset;
-			
+
 			var isFound = false;
 			for (var i=0; i < this._LibConfig.length;i++) {
 				var indexOf = this._LibConfig[i].Options.indexOf(Detail);
@@ -1411,26 +1411,26 @@
 						this._RenderObject[this._LibConfig[i].Options[key1]].Swatch = id
 					}
 					this._LibConfig[i].Swatch = id;
-				} 
+				}
 			}
-			
+
 			if(isFound){
 				if(!this._SpecificRenderClick && this._IsSpecific)
 				this._IsSpecific = false;
-			
+
 				this._SpecificImageSource = false;
 				//this._IsSpecific = false;
 				this._LSwatch = id;
-				
+
 				if(!onlyset)
 					this._createUrl(this._RenderObject,true);
 			}else{
 				return false;
 			}
-			
-			
+
+
 		},
-		
+
 		Summary: function () {
 
 			var selectedElements = new Array();
@@ -1476,14 +1476,14 @@
 			}
 
 			for (var key in this._RenderObject) {
-				
+
 				if (this._CurrentBlockedDetails.indexOf(key) !== -1)
 					continue;
 				if (this._CurrentBlockedFeatures.indexOf(this._RenderObject[key].Id) !== -1)
 					continue;
-				
+
 				selectedElements.push(this._RenderObject[key].Id);
-				
+
 				if(this._RenderObject[key].Contrast.CSwatch != ""){
 					selectedContrast.push({
 						'Detail': key,
@@ -1552,7 +1552,7 @@
 					beforeSend: function (xhr) {
 						xhr.overrideMimeType('text/plain; charset=x-user-defined');
 					},
-					success: function (result, textStatus, jqXHR) {       
+					success: function (result, textStatus, jqXHR) {
 						if(result.length < 1){
 							console.error("The Image doesn't exist");
 							return
@@ -1569,7 +1569,7 @@
 					},
 					error: function(xhr, textStatus, errorThrown){
 						console.error("Error in getting document "+textStatus);
-					} 
+					}
 				});
 				return image;
 			}
@@ -1586,7 +1586,7 @@
 				this._MonogramFont = lookData.MF;
 				this._MonogramText = lookData.MT;
 				this._CurrentAlignmentIndex = lookData.AI;
-				this._SaveLookAlignmentFlag = true; 
+				this._SaveLookAlignmentFlag = true;
 				this._SelectedAlignment = this._Alignments[this._CurrentAlignmentIndex];
 				this._createRenderObject("");
 				this._SaveLookAlignmentFlag = false;
@@ -1631,7 +1631,7 @@
 		},
 
 		ResetContrast: function () {
-			
+
 			for (var key in this._RenderObject){
 				this._RenderObject[key].Contrast = {
 					CSwatch : "",
@@ -1639,7 +1639,7 @@
 					CNo : ""
 				}
 			}
-			
+
 			this._createUrl(this._RenderObject,true);
 		},
 
@@ -1654,10 +1654,10 @@
 			this._MonogramFont = "";
 			this._MonogramText = "";
 			this._IsSpecific = false;
-			
-			for (var lkey=0; lkey < this._LibConfig.length;lkey++) 
+
+			for (var lkey=0; lkey < this._LibConfig.length;lkey++)
 				this._LibConfig[lkey].Swatch = "";
-				
+
 			this._createRenderObject();
 		},
 
@@ -1693,21 +1693,21 @@
 
 			return null;
 		},
-		
+
 		Monogram : function(){
-			
+
 			if(this._MPlacement.length > 0){
 				var monogram = {
 					"MonogramPlacement" : this._MPlacement,
 					"MonogramFont" : this._MFont,
 					"MonogramColor" : this._MColor
 				}
-				
+
 				return monogram;
 			}
 			return null;
 		},
-		
+
 		CustomizeOptions: function (productDetailArray,featureArray) {
 			if(this.Option("IsOptionVisible")){
 				if(productDetailArray != undefined && featureArray == undefined){
@@ -1841,13 +1841,13 @@
 			return null;
 		},
 		GetCall : function(id){
-			
+
 			var json = JSON.stringify(this._RenderObject);
 			var r = JSON.parse(json);
-			
+
 			var key = "";
 			var IsFabric = false;
-			
+
 			for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
 				for(var o=0 ; o < this._ProductData[dataIndex].Options.length; o++ ){
 					for(var f=0;f < this._ProductData[dataIndex].Options[o].Features.length;f++ ){
@@ -1855,13 +1855,13 @@
 							if(this._ProductData[dataIndex].Options[o].Features[f].DataAttr.indexOf("data-tds-fabric") > -1){
 								IsFabric = true;
 							}
-							
+
 							key = this._ProductData[dataIndex].Id;
 						}
 					}
 				}
 			}
-			
+
 			if(!IsFabric){
 				if(key != "")
 					r[key].Id = id;
@@ -1892,9 +1892,9 @@
 						}
 						that._LibConfig[i].Swatch = fid;
 						isFound = true;
-					}	
-				} 
-				
+					}
+				}
+
 				if(isFound)
 					that.LibConfigTexture(fid,DetailId);
 				else

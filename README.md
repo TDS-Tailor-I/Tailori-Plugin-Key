@@ -1,6 +1,6 @@
 <img src="icon.png" align="right" />
 
-# Tailori API 
+# Tailori API
 
 Textronics Design System have created an interactive platform for bespoke clothing. Textronics Tailori API is a plugin that simplifies access to the functionality of textronics services.
 
@@ -11,21 +11,21 @@ It provides following features:
 
 * [Element Rendering](#)  
   It allows you to render Product, Options & Features.   
-	
+
 * [Contrast Options](#)  
   Allows to apply contrast fabric on the product.
-  
+
 * [Monogram](#)  
   This feature allows to give Company Branding on Prouduct i.e, Company Name, Logo, etc.
-  
+
 * [Auto Specific view](#)  
   Provides Zoomed View of Specific Part of a Product i.e., Shirt Collar, Sleeves, etc.
-  
+
 * [Auto Alignment Change](#)  
   To View Back and Front Details.
-  
+
 * [Summary](#)  
-  Provides Summary of your customised product and its details.	
+  Provides Summary of your customised product and its details.
 
 * [Save and load favourite look](#)  
   Allows user to Save and custom product look.
@@ -38,30 +38,30 @@ ________________________________________________________________________________
 
 i)  jquery.js   [download](https://code.jquery.com)
 
-ii)  jsrender.js   [download](https://www.jsviews.com/download/jsrender.min.js) 
+ii)  jsrender.js   [download](https://www.jsviews.com/download/jsrender.min.js)
 
-iii) jquery.tds.js [download](https://github.com/Sagar-TDS/Tailori-Plugin/archive/master.zip) 
+iii) jquery.tds.js [download](https://github.com/Sagar-TDS/Tailori-Plugin/archive/master.zip)
 
 
 # Templates
   ##  Binding Element Attributes  
   In addition to the normal text, you may also want your templates to contain HTML elements whose attributes are bound to the
   controller.  
-	
-	
-	
+
+
+
 	  <html>
-	  <head>	
+	  <head>
 	  <script id="myTemplate" type="text/x-jsrender">Name: {{:name}}</script>
 	  <head/>
 
-	  Binding template "myTemplate" in html body will show result 
+	  Binding template "myTemplate" in html body will show result
 
 	  <body>
 	   <div id="myTemplate">In this Id your all var data will call     
 	   </div>   
 	  </body>
-	  
+
 
 # Documentation
 
@@ -70,7 +70,7 @@ iii) jquery.tds.js [download](https://github.com/Sagar-TDS/Tailori-Plugin/archiv
 | -----------------------------------------------|------------| -------:|
 | ServiceUrl                                     | ServiceUrl is a url where we place all our data that we need to call, <br />For eg. product, draping parts, buttons, fabrics, etc. <br />**Provided by textronics.**  | * |
 | Key                                    | Unique id generated when user logs in with given username and password <br>**Provided by textronics.** </br> | * |			
-| Product                                        | Product Name <br /> For eg. 'Product':'MEN-SHIRT'| * | 
+| Product                                        | Product Name <br /> For eg. 'Product':'MEN-SHIRT'| * |
 | ProductTemplate                                | jsrender template for rendering options/elements.<br />Create a Template id, when we call template id, template will open in page.<br />For eg. 'Product Template':#div-1 | * |
 | ImageSource                                    | Image container where rendered images are placed (i.e. id, class or etc).<br /> Keep this empty if you want it to manage rendered image by its own.<br />For eg. 'Product Template': #img-div |         |
 | OptionsPlace                                   | Container for placing the ProductOptions<br />For eg. ``` <html>    <div id ="ABC">product options will appear here </div>    </html>```<br />Here in html, we call id="ABC" so, all the features will be called in ABC.| * <sup><sup>1</sup></sup> |         
@@ -90,7 +90,7 @@ iii) jquery.tds.js [download](https://github.com/Sagar-TDS/Tailori-Plugin/archiv
 *: Required.<br/>
 *<sup><sup>1</sup></sup>: Properties marked as *<sup><sup>1</sup></sup> are dependent on each other.<br/>
 *<sup><sup>2</sup></sup>: Properties marked as *<sup><sup>2</sup></sup> are dependent on each other.<br/>
-	
+
 ## Data Attributes
 | Data Attribute       | Description                                                    |
 | ---------------------|:--------------------------------------------------------------|
@@ -123,27 +123,27 @@ To create Tailori object public methods are used.
 			'ServiceUrl':'http://172.16.1.63',
 			'Key' : "12345678"
      });
-      
+
 ```
 ------------------------------------------------
 ### `Product()`
-If you want to change the **product** i.e from men-shirt to men-suit use 
+If you want to change the **product** i.e from men-shirt to men-suit use
 
 ```js
   obj.Product("men-suit");
 ```
 ------------------------------------------------
 ### `Texture()`
-Get and Set the Texture (i.e.  fabric or color )  to apparel use 
+Get and Set the Texture (i.e.  fabric or color )  to apparel use
 
 if you want to apply fabric from textronics fabric library send id of fabric
 ```js
   obj.Texture("fab12589");
 ```
 
-if you want to apply color as texture 
+if you want to apply color as texture
 ```js
-  obj.Texture("red"); 
+  obj.Texture("red");
   obj.Texture("#ff0000");  //hex value of color
   obj.Texture("rgb(255,0,0)");  //rgb value of color
   obj.Texture("hsl(0, 100%, 50%)");  //hsl value of color
@@ -157,16 +157,16 @@ if you want texture of apparel call method without passing parameter
 ------------------------------------------------
 
 ### `ContrastTexture()`
-Get and Set the Texture (i.e.  fabric or color )  to contrast part of apparel 
+Get and Set the Texture (i.e.  fabric or color )  to contrast part of apparel
 
 if you want apply fabric from textronics fabric library send id of fabric
 ```js
   obj.ContrastTexture("fab12589");
 ```
 
-if you want to apply color as texture 
+if you want to apply color as texture
 ```js
-  obj.ContrastTexture("red"); 
+  obj.ContrastTexture("red");
   obj.ContrastTexture("#ff0000");  //hex value of color
   obj.ContrastTexture("rgb(255,0,0)");  //rgb value of color
   obj.ContrastTexture("hsl(0, 100%, 50%)");  //hsl value of color
@@ -182,16 +182,16 @@ if you want texture of contrast of apparel call method without passing parameter
 ------------------------------------------------
 
 ### `LibConfigTexture()`
-Get and Set the Texture (i.e.  fabric or color )  to LibConfig (button,tie,shirt etc.) part of apparel 
+Get and Set the Texture (i.e.  fabric or color )  to LibConfig (button,tie,shirt etc.) part of apparel
 
 if you want apply fabric from textronics fabric library send id of fabric
 ```js
   obj.LibConfigTexture("fab12589");
 ```
 
-if you want to apply color as texture 
+if you want to apply color as texture
 ```js
-  obj.LibConfigTexture("red"); 
+  obj.LibConfigTexture("red");
   obj.LibConfigTexture("#ff0000");  //hex value of color
   obj.LibConfigTexture("rgb(255,0,0)");  //rgb value of color
   obj.LibConfigTexture("hsl(0, 100%, 50%)");  //hsl value of color
@@ -209,7 +209,7 @@ obj.SpecificDetails();
 ---------------------------------------------------------------------------
 
 ### `SpecificRender()`
-To specifically render an image, pass any one parameters from the three given below for desired view of the part: 
+To specifically render an image, pass any one parameters from the three given below for desired view of the part:
 
 <ul>
 <li>detail id   -     To show specific view of any product detail.</li>
@@ -237,7 +237,7 @@ obj.ResetContrast();
 ```
 
 ### `ResetProduct()`
-To load default apparels. 
+To load default apparels.
 ```js
 obj.ResetProduct();
 ```
@@ -245,7 +245,7 @@ obj.ResetProduct();
 ### `Look()`
 To get and set your favourite look (*i.e. if you want to save your customized apparel for future use*)<br />
 This will return you object which contain ***data*** and ***Image*** <br/>
-If you want to load your look next time send ***data***  to the method. 
+If you want to load your look next time send ***data***  to the method.
 
 
 Get Look
@@ -300,7 +300,7 @@ function GetProduct(){
 }
 	$(document).ready(function () {
 		//alert("hi")		
-		
+
 		 obj = $("#div-1").tailori(
 		{
 			'Product':'MEN-SHIRT',   //Product i.e men shirt,women shirt, men suit, etc
@@ -310,21 +310,21 @@ function GetProduct(){
 			'Key' : "12345678",
 			'AutoSpecific':false, //Auto specific view after selecting any feature
 			'AutoAlignment':false, //Auto alignment set according to selected element
-			'Monogram':false, //If monogram 
+			'Monogram':false, //If monogram
 			'MonogramTemplate':'#theTmplm', //Tempalte id for Monogram UI
 			'MonogramPlace':'#monoplace', // html containter for Monogram
 			'OnFeatureChange': function(){
 				alert($(this).attr("data-tds-key"));
-				
+
 				console.log(abc);				
 			},
 			'OnRenderImageChange':function(a){
 				console.log(a);
 				//console.log(b);
 			}
-			
+
 		});
-		
+
 	});
    </script>
 ```
@@ -334,18 +334,18 @@ _______________________________________________________________________________
 
 # How to use JsRender and Creating Template
 JsRender is a light-weight but powerful templating engine.
-	   
-## Define a template	
+
+## Define a template
 From a template declared as markup in a script block:
 
 <code><script id="myTemplate" type="text/x-jsrender">Name: {{:name}}</script></code>    
-    
+
 But now we are using for textronics tailori, so we will use {{for ...}} tag
 Following object hierarchy is provided to you for creating templates.
 <pre>
 ├──── Product
 │   │
-│   ├──── Options 
+│   ├──── Options
 │   │   │
 │   │   └── Features
 │   │
@@ -361,7 +361,7 @@ Following is an object structure of Product, Options, Features, Contrasts, Monog
 <pre>
  Product/ Options/ Features/ Contrasts/ MonogramPlacement/ MonogramFont/ MonogramColor
     │
-    ├── Id 
+    ├── Id
     ├── Name
     └── ImageSource
 </pre>
@@ -372,19 +372,19 @@ A template (with a conditional section using an {{for}}-------{{for}}, tag):
  ##### In Example
 Products we are using{{for product}}-------{{for}}  
 Options we are using{{for options}}-----{{for}}  
-Contast we are using{{for contrast}}-----{{for}} 
+Contast we are using{{for contrast}}-----{{for}}
 
-## Example of template for bootstrap accordion 
+## Example of template for bootstrap accordion
 
 ```html
 <script id="theTmpl" type="text/x-jsrender">
-		
+
 <div class="panel-group" id="accordion2">
 {{for Product}}
 <div class="panel panel-default">
 	<div class="panel-heading">
 	<h4 class="panel-title">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" 
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
 							    href="#collapse{{:Id}}">
 	<img style="max-width:30px;" src="{{:ImageSource}}">{{:Name}}
 	</a>
@@ -394,7 +394,7 @@ Contast we are using{{for contrast}}-----{{for}}
 	<div class="panel-body">
 	<table class="table">
 	{{for Options}}
-						
+
 	{{for Features}}		
 		<tr id="{{:Id}}">
 			<td><span class="glyphicon glyphicon-chevron-right"></span>
@@ -421,7 +421,7 @@ Contast we are using{{for contrast}}-----{{for}}
 ```
 _______________________________________________________________________________
 
-## Example of template for bootstrap nav panel 
+## Example of template for bootstrap nav panel
 
 ```html
 <script id="theTmpl1" type="text/x-jsrender">
@@ -452,13 +452,13 @@ _______________________________________________________________________________
 	</div>
   </div>
 </div>
-</div>	
+</div>
 </script>
 ```
 _______________________________________________________________________________
 
 If you want to show options and feature dynamically, you can create three template
- 
+
 1. For Product
 2. For Option
 3. For Feature
@@ -475,7 +475,7 @@ if *IsOptionVisible=false*  or Product contains only one option then it will dir
 	</li>
 	{{for Product}}
 	<li>
-	<a class="nav-toggle" href="#" style="background-image:url({{:ImageSource}}); 
+	<a class="nav-toggle" href="#" style="background-image:url({{:ImageSource}});
 	                                               background-repeat:no-repeat;">
 	<span>{{:Name}}</span>
 	</a>
@@ -494,7 +494,7 @@ ___________________________________________________________________________
 <script id="optionsTemplate" type="text/x-jsrender">
  {{for Options}}
 	<li id='{{:Id}}'>
-	<a class='nav-toggle' href='#' style='background-image:url({{:ImageSource}}); 
+	<a class='nav-toggle' href='#' style='background-image:url({{:ImageSource}});
 						       background-repeat:no-repeat;'>
 	<span>{{:Name}}</span>
 	</a>
@@ -517,7 +517,7 @@ ____________________________________________________________________
 	 </a>
 	</li>
  {{/for}}
-</script> 
+</script>
 ```
 
 _______________________________________________________________________________
@@ -546,7 +546,7 @@ _______________________________________________________________________________
 </div>
 <div class="form-group">
 	<label for="usr">Monogram Text:</label>
-	<input class="form-control" id="monogram-text" data-tds-moption="text" 
+	<input class="form-control" id="monogram-text" data-tds-moption="text"
 	                                 placeholder="Enter Text" type="text">
 </div>
 <div>
@@ -554,7 +554,7 @@ _______________________________________________________________________________
 	<ul class="color">
 	    {{for MonogramColor}}
 	    <li style="background-color:{{:Name}};">
-	    <a href="#" style="background-color:{{:Name}}; background-repeat:no-repeat; 
+	    <a href="#" style="background-color:{{:Name}}; background-repeat:no-repeat;
 	                                                         background-size:100%;">
 	    </a>
 	    </li>
@@ -564,6 +564,3 @@ _______________________________________________________________________________
 </script>
 
 ```
-
-
-
