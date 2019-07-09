@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-5.1 [23d19y/l1.1]
+ * jQuery tds.tailori plugin v-7.1 [09d19y/l5.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-5.1 [23d19y/l1.1]");
+			console.info("Textronic jquery.tds.js v-7.1 [09d19y/l5.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -285,9 +285,11 @@
 
 					$("body").on("click", "[data-tds-element]", function (e) {
 						//e.stopPropagation();
-						var IsFound  = false;
+						var IsFound  = false
+						var featureBlock = false;
 						if ($(this).hasClass("block") || that._CurrentBlockedFeatures.indexOf($(this).attr("data-tds-element")) > -1 ||
 						that._CurrentBlockedDetails.indexOf($(this).attr("data-tds-key")) > -1) {
+							featureBlock = true;
 							console.error("feature is block");
 						} else {
 							if($(this).attr('data-tds-fabric')){
@@ -322,11 +324,11 @@
 						if(IsFound){
 							var callback = that.Option("OnLibConfigChange");
 							if (typeof callback == 'function')
-								callback.call(this, $(this).data("tds-key"),$(this).data("tds-element"));
+								callback.call(this, $(this).data("tds-key"),$(this).data("tds-element"),featureBlock);
 						}else{
 							var callback = that.Option("OnFeatureChange");
 							if (typeof callback == 'function')
-								callback.call(this, $(this).data("tds-element"));
+								callback.call(this, $(this).data("tds-element"),featureBlock);
 						}
 
 					});
