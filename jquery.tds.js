@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-7.1 [09d19y/l5.1]
+ * jQuery tds.tailori plugin v-8.1 [14d19y/l7.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-7.1 [09d19y/l5.1]");
+			console.info("Textronic jquery.tds.js v-8.1 [14d19y/l7.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1027,8 +1027,8 @@
 					success: function (data) {
 
 						//$(this.Option("ImageSource")).empty();
-						if(this._SelectedAlignment.toLowerCase() == "face" && !this._IsSpecific)
-							this._ImageUrl = this.Option("ServiceUrl") + "/v1/img?" + this._Url+"&key="+this.Option("Key");
+						//if(this._SelectedAlignment.toLowerCase() == "face" && !this._IsSpecific)
+						this._ImageUrl = this.Option("ServiceUrl") + "/v1/img?" + this._Url+"&key="+this.Option("Key");
 
 						if(!this._SpecificImageSource)
 							$(this.Option("SpecificImageSource")).empty();
@@ -1546,6 +1546,14 @@
 			}
 			else if(rawRenderData.toLowerCase() === "image"){
 				var image = "";
+				
+				if(this._ImageUrl.indexOf("view=FACE") == -1){
+					var imageurl = this._ImageUrl.split("view=");
+						imageurl[1] = imageurl[1].substr(imageurl[1].indexOf("&"));
+				
+					this._ImageUrl = imageurl[0] + "view=FACE" + imageurl[1];
+				}
+				
 				$.ajax({
 					url: this._ImageUrl,
 					type: "GET",
@@ -1564,7 +1572,7 @@
 						var responseText = jqXHR.responseText;
 						var responseTextLen = responseText.length;
 
-						for ( i = 0; i < responseTextLen; i++ ) {
+						for (var i = 0; i < responseTextLen; i++ ) {
 							binary += String.fromCharCode(responseText.charCodeAt(i) & 255)
 						}
 						image = "data:image/png;base64," + btoa(binary);
