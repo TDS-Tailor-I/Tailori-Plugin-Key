@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-8.1 [14d19y/l7.1]
+ * jQuery tds.tailori plugin v-9.1 [11d19y/l8.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -664,7 +664,7 @@
 						this._RenderObject[this._ProductData[dataIndex].Id] = {
 							Id: this._ProductData[dataIndex].Options[0].Features[0].Id,
 							OptionId : this._ProductData[dataIndex].Options[0].Id,
-							Swatch: "",
+							Swatch: this._Swatch,
 							Color: "",
 							Contrast: {
 								CSwatch : "",
