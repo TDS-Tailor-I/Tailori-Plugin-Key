@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-9.2 [24d19y/l9.1]
+ * jQuery tds.tailori plugin v-10.1 [14d19y/l9.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-9.2 [24d19y/l9.1]");
+			console.info("Textronic jquery.tds.js v-10.1 [14d19y/l9.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -639,18 +639,19 @@
 				for(var l = 0 ; l < that._LibConfig.length ; l++){
 					if(that._LibConfig[l] == undefined)
 						continue
-					LibconfigName.push(that._LibConfig[l].Name.toLowerCase());
+					LibconfigName.push(that._LibConfig[l].Name.trim().toLowerCase());
 					LibconfigIds = LibconfigIds.concat(that._LibConfig[l].Options);
 				}
 				//console.log(LibconfigName);
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++) {
 					if(LibconfigIds.indexOf(this._ProductData[dataIndex].Id) > -1 && (
-					this._ProductData[dataIndex].Name.toLowerCase().indexOf("waist") == -1 || this._ProductData[dataIndex].Name.toLowerCase().indexOf("trouser") == -1 || this._ProductData[dataIndex].Name.toLowerCase().indexOf("button holes") == -1)){
+					this._ProductData[dataIndex].Name.toLowerCase().indexOf("waist") == -1 || this._ProductData[dataIndex].Name.toLowerCase().indexOf("trouser") == -1 )){
 						
-						if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1){
+						if(this._ProductData[dataIndex].Name.toLowerCase().indexOf("buttons") > -1 || this._ProductData[dataIndex].Name.toLowerCase().indexOf("button holes") > -1
+						|| this._ProductData[dataIndex].Name.toLowerCase().indexOf("button threads") > -1){
 							selectedButton = this._ProductData[dataIndex].Options[0].Features[0].Name.toLowerCase();
 							//buttonId.push(this._ProductData[dataIndex].Id);
-							buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.toLowerCase())].Options);
+							buttonId.push(this._LibConfig[LibconfigName.indexOf(this._ProductData[dataIndex].Name.trim().toLowerCase())].Options);
 							isButton = true;
 							
 						}
@@ -811,21 +812,20 @@
 			}
 
 			if(isButton){
-				$.ajax({
-
-					url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[0][0],
-					dataType : "json",
-					context: this,
-					success: function (data) {
-						var swatchId;
-						// $.each(data[0],function(index,value){
-							// swatchId = value;
-							// if(swatchId != undefined || swatchId != "")
-								// return false;
-						// });
-						swatchId = data[0].Id;
-						if(buttonId.length > 0)
-						{
+				for(let bo = 0 ; bo < buttonId.length; bo++ ){
+					$.ajax({
+						url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[bo][0],
+						dataType : "json",
+						context: this,
+						success: function (data) {
+							var swatchId;
+							// $.each(data[0],function(index,value){
+								// swatchId = value;
+								// if(swatchId != undefined || swatchId != "")
+									// return false;
+							// });
+							swatchId = data[0].Id;
+							
 							for(var i = 0 ; i < buttonId.length; i++){
 								for(var opt = 0;opt < buttonId[i].length;opt++){
 									that._RenderObject[buttonId[i][opt].toString()].Swatch = swatchId;
@@ -838,12 +838,14 @@
 									}
 								}
 							}
-						}
-						that._createUrl(that._RenderObject,true);
-						isButton = false;
-					},
-					fail: function () {}
-				});
+							if(bo == (buttonId.length - 1)){
+								that._createUrl(that._RenderObject,true);
+								isButton = false;
+							}
+						},
+						fail: function () {}
+					});
+				}
 			}else{
 				this._createUrl(this._RenderObject,true);
 				//this._createUrl(this._RenderObject,true)
