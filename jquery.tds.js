@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.2 [30d19y/l10.1]
+ * jQuery tds.tailori plugin v-10.3 [30d19y/l10.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.2 [30d19y/l10.1]");
+			console.info("Textronic jquery.tds.js v-10.3 [30d19y/l10.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -812,6 +812,7 @@
 			}
 
 			if(isButton){
+				var count = 0;
 				for(let bo = 0 ; bo < buttonId.length; bo++ ){
 					$.ajax({
 						url: this.Option("ServiceUrl") + "/v1/Swatches?key="+this.Option("Key")+"&id="+buttonId[bo][0],
@@ -819,6 +820,7 @@
 						context: this,
 						success: function (data) {
 							var swatchId;
+							count++;
 							// $.each(data[0],function(index,value){
 								// swatchId = value;
 								// if(swatchId != undefined || swatchId != "")
@@ -839,7 +841,7 @@
 								
 							}
 							
-							if(bo == (buttonId.length - 1)){
+							if(count == buttonId.length){
 								that._createUrl(that._RenderObject,true);
 								isButton = false;
 							}
