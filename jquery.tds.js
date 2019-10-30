@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-10.1 [14d19y/l9.2]
+ * jQuery tds.tailori plugin v-10.2 [30d19y/l10.1]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-10.1 [14d19y/l9.2]");
+			console.info("Textronic jquery.tds.js v-10.2 [30d19y/l10.1]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -826,18 +826,19 @@
 							// });
 							swatchId = data[0].Id;
 							
-							for(var i = 0 ; i < buttonId.length; i++){
-								for(var opt = 0;opt < buttonId[i].length;opt++){
-									that._RenderObject[buttonId[i][opt].toString()].Swatch = swatchId;
-								}
+							for(var i = 0 ; i < buttonId[bo].length; i++){
+								that._RenderObject[buttonId[bo][i].toString()].Swatch = swatchId;
+								
 								for (var lkey=0; lkey < this._LibConfig.length;lkey++) {
-									for(var opt = 0;opt < buttonId[i].length;opt++){
-										if(this._LibConfig[lkey].Options.indexOf(buttonId[i][opt]) > -1){
+									for(var opt = 0;opt < buttonId[bo].length;opt++){
+										if(this._LibConfig[lkey].Options.indexOf(buttonId[bo][i]) > -1){
 											this._LibConfig[lkey].Swatch = swatchId;
 										}
 									}
 								}
+								
 							}
+							
 							if(bo == (buttonId.length - 1)){
 								that._createUrl(that._RenderObject,true);
 								isButton = false;
