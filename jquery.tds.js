@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-1.2 [31d20y/l1.1]
+ * jQuery tds.tailori plugin v-2.1 [03d20y/l1.2]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -98,7 +98,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-1.2 [31d20y/l1.1]");
+			console.info("Textronic jquery.tds.js v-2.1 [03d20y/l1.2]");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			this._setCofiguration(this.Option("Product"));
@@ -1536,7 +1536,7 @@
 
 		},
 
-		Look: function (rawRenderData,beforeSendfn) {
+		Look: function (rawRenderData,imagef) {
 			if (rawRenderData === undefined) {
 				var lookData = {
 					'RO': this._RenderObject,
@@ -1566,15 +1566,23 @@
 					var imageurl = this._ImageUrl.split("view=");
 						imageurl[1] = imageurl[1].substr(imageurl[1].indexOf("&"));
 				
-					this._ImageUrl = imageurl[0] + "view=FACE" + imageurl[1];
+					image = imageurl[0] + "view=FACE" + imageurl[1];
 				}else if(this._ImageUrl.indexOf("OPEN") > -1){
 					var imageurl = this._ImageUrl.split("view=");
 						imageurl[1] = imageurl[1].substr(imageurl[1].indexOf("&"));
 				
-					this._ImageUrl = imageurl[0] + "view=FACE" + imageurl[1];
+					image = imageurl[0] + "view=FACE" + imageurl[1];
+				}else{
+					image = this._ImageUrl;
 				}
 				
-				$.ajax({
+				if(imagef !== undefined){
+					var imageurl = this._ImageUrl.split("view=");
+						imageurl[1] = imageurl[1].substr(imageurl[1].indexOf("&"));
+				
+					image = imageurl[0] + "&if=" + imagef + imageurl[1];
+				}
+				/*$.ajax({
 					url: this._ImageUrl,
 					type: "GET",
 					processData: false,
@@ -1603,7 +1611,7 @@
 					error: function(xhr, textStatus, errorThrown){
 						console.error("Error in getting document "+textStatus);
 					}
-				});
+				});*/
 				return image;
 			}
 			else {
